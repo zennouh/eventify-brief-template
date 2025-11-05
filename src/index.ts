@@ -26,7 +26,7 @@ interface IStatics {
 
 let allEvents: IEvent[] = [];
 let variants: IVariant[] = [];
-let chart: ChartJs;
+// let chart: ChartJs;
 
 // // @ts-ignore
 // ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
@@ -58,24 +58,24 @@ let chart: ChartJs;
 // }
 
 
-// function calculateStatics(): IStatics {
-//     let totalEvent = allEvents.length;
-//     let totalSeat = 0;
-//     let totalRevenue = 0;
-//     for (const e of allEvents) {
-//         totalSeat += e.numberOfSet;
-//         totalRevenue += e.basePrice
-//     }
-//     return { totalEvent, totalSeat, totalRevenue }
-// }
+function calculateStatics(): IStatics {
+    let totalEvent = allEvents.length;
+    let totalSeat = 0;
+    let totalRevenue = 0;
+    for (const e of allEvents) {
+        totalSeat += e.numberOfSet;
+        totalRevenue += e.basePrice
+    }
+    return { totalEvent, totalSeat, totalRevenue }
+}
 
-// function updateStaticsSection() {
-//     let statics: IStatics = calculateStatics();
-//     document.getElementById("stat-total-events")!.textContent = statics.totalEvent.toString();
-//     document.getElementById("stat-total-seats")!.textContent = statics.totalSeat.toString();
-//     document.getElementById("stat-total-price")!.textContent = `$${statics.totalRevenue}`
+function updateStaticsSection() {
+    let statics: IStatics = calculateStatics();
+    document.getElementById("stat-total-events")!.textContent = statics.totalEvent.toString();
+    document.getElementById("stat-total-seats")!.textContent = statics.totalSeat.toString();
+    document.getElementById("stat-total-price")!.textContent = `$${statics.totalRevenue}`
 
-// }
+}
 
 
 function selectSection(event: any) {
@@ -120,10 +120,10 @@ function addEvent(e: Event) {
         extractDataFromVar();
         const event: IEvent = { title, imageUrl, description, numberOfSet, basePrice, variants };
         allEvents.push(event);
-        // updateStaticsSection();
+        updateStaticsSection();
         // chart.destroy();
         // renderGraph();
-        saveEvent(allEvents);
+        // saveEvent(allEvents);
 
 
         variants = [];
@@ -228,18 +228,18 @@ function HandleInvalidInputs(title: string, imageUrl: string, description: strin
 
 
 
-function saveEvent(events: IEvent[]) {
-    let strObjs: string = JSON.stringify(events);
-    localStorage.setItem(allEventsKey, strObjs)
-}
+// function saveEvent(events: IEvent[]) {
+//     let strObjs: string = JSON.stringify(events);
+//     localStorage.setItem(allEventsKey, strObjs)
+// }
 
-function getEventsStorage() {
-    let savedObjs: string = localStorage.getItem(allEventsKey) || "";
-    if (savedObjs) {
-        allEvents = JSON.parse(savedObjs) || [];
-        // updateStaticsSection();
-    }
-}
+// function getEventsStorage() {
+//     let savedObjs: string = localStorage.getItem(allEventsKey) || "";
+//     if (savedObjs) {
+//         allEvents = JSON.parse(savedObjs) || [];
+//         updateStaticsSection();
+//     }
+// }
 
 
 // function handleTable() {
@@ -248,7 +248,7 @@ function getEventsStorage() {
 
 
 function init() {
-    getEventsStorage();
+    // getEventsStorage();
     // renderGraph();
     document.querySelectorAll(".sidebar__btn").forEach(btn => btn.addEventListener("click", selectSection));
     document.querySelector(".form__actions button.btn--primary")?.addEventListener("click", addEvent);
