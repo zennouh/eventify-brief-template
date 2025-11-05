@@ -124,8 +124,6 @@ function addEvent(e: Event) {
         // chart.destroy();
         // renderGraph();
         // saveEvent(allEvents);
-
-
         variants = [];
         form?.reset();
     }
