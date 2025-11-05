@@ -26,36 +26,36 @@ interface IStatics {
 
 let allEvents: IEvent[] = [];
 let variants: IVariant[] = [];
-// let chart: ChartJs;
+let chart: ChartJs;
 
-// // @ts-ignore
-// ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
-// );
-
-
-// function renderGraph() {
-
-//     const labels: string[] = Array.from({ length: allEvents.length }, (_, index) => index.toString());
-//     const data: number[] =
-//         Array.from({ length: allEvents.length }, (_, index) => allEvents[index].numberOfSet);
-//     const ctx = document.getElementById("myChart") as HTMLCanvasElement;
+// @ts-ignore
+ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
+);
 
 
-//     chart = new ChartJs.Chart(ctx, {
-//         type: "line",
-//         data: {
-//             labels: labels,
-//             datasets: [
-//                 {
-//                     label: "# of seats",
-//                     data: data,
-//                     borderWidth: 1,
-//                 },
-//             ],
-//         },
-//     });
+function renderGraph() {
 
-// }
+    const labels: string[] = Array.from({ length: allEvents.length }, (_, index) => index.toString());
+    const data: number[] =
+        Array.from({ length: allEvents.length }, (_, index) => allEvents[index].numberOfSet);
+    const ctx = document.getElementById("myChart") as HTMLCanvasElement;
+
+
+    chart = new ChartJs.Chart(ctx, {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "# of seats",
+                    data: data,
+                    borderWidth: 1,
+                },
+            ],
+        },
+    });
+
+}
 
 
 function calculateStatics(): IStatics {
@@ -102,6 +102,19 @@ function selectSection(event: any) {
 }
 
 
+function clearInputs() {
+    const form = document.getElementById("event-form") as HTMLFormElement;
+    const allv = document.getElementsByClassName("variant-row");
+    for (let index = 0; index < allv.length; index++) {
+        const element = allv[index];
+        console.log(element);
+
+        element.remove();
+    }
+    variants = [];
+    form?.reset();
+}
+
 
 function addEvent(e: Event) {
     const form = document.getElementById("event-form") as HTMLFormElement;
@@ -121,9 +134,13 @@ function addEvent(e: Event) {
         const event: IEvent = { title, imageUrl, description, numberOfSet, basePrice, variants };
         allEvents.push(event);
         updateStaticsSection();
-        // chart.destroy();
-        // renderGraph();
-        // saveEvent(allEvents);
+        chart.destroy();
+        renderGraph();
+        handleTable()
+
+
+        //============================
+        saveEvent(allEvents);
         variants = [];
         form?.reset();
     }
@@ -150,8 +167,6 @@ function addVariant() {
     console.log(div.children);
 
     div.children[4].addEventListener("click", () => {
-        console.log("click");
-
         div.remove();
     })
 
@@ -226,30 +241,60 @@ function HandleInvalidInputs(title: string, imageUrl: string, description: strin
 
 
 
-// function saveEvent(events: IEvent[]) {
-//     let strObjs: string = JSON.stringify(events);
-//     localStorage.setItem(allEventsKey, strObjs)
-// }
+function saveEvent(events: IEvent[]) {
+    let strObjs: string = JSON.stringify(events);
+    localStorage.setItem(allEventsKey, strObjs)
+}
 
-// function getEventsStorage() {
-//     let savedObjs: string = localStorage.getItem(allEventsKey) || "";
-//     if (savedObjs) {
-//         allEvents = JSON.parse(savedObjs) || [];
-//         updateStaticsSection();
-//     }
-// }
+function getEventsStorage() {
+    let savedObjs: string = localStorage.getItem(allEventsKey) || "";
+    if (savedObjs) {
+        allEvents = JSON.parse(savedObjs) || [];
+        updateStaticsSection();
+        handleTable();
+    }
+}
 
 
-// function handleTable() {
-//     const tr = document.createElement("tr");
-// }
+function handleTable() {
+    const tbody = document.querySelector(".table__body")
+    for (let i = 0; i < allEvents.length; i++) {
+        const ele = allEvents[i]
+        const tr = document.createElement("tr");
+        let li: string = "";
+        
+        ele.variants?.forEach((v) => {
+            li += `<li><span class="badge"> ${v.vName} || ${v.vQuantity} || ${v.vValue}</span></li> `;
+        })
+        tr.className = 'table__row';
+        tr.dataset.eventId = (i + 1).toString()
+        tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${ele.title}</td>
+        <td>${ele.numberOfSet}</td>
+        <td>$${ele.basePrice}</td>
+        <td>
+            <ul>
+               ${li}
+            </ul>
+        </td>
+        <td>
+            <button class="btn btn--small" data-action="details" data-event-id="${i + 1}">Details</button>
+            <button class="btn btn--small" data-action="edit" data-event-id="${i + 1}">Edit</button>
+            <button class="btn btn--danger btn--small" data-action="archive" data-event-id="${i + 1}">Delete</button>
+        </td>
+      `
+        tbody?.appendChild(tr);
+    }
+}
 
 
 function init() {
-    // getEventsStorage();
-    // renderGraph();
+    getEventsStorage();
+    renderGraph();
     document.querySelectorAll(".sidebar__btn").forEach(btn => btn.addEventListener("click", selectSection));
     document.querySelector(".form__actions button.btn--primary")?.addEventListener("click", addEvent);
+    document.querySelector("button.btn--ghost")?.addEventListener("click", clearInputs);
     document.getElementById("btn-add-variant")?.addEventListener("click", addVariant);
 
 }

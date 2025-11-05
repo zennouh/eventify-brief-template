@@ -54,6 +54,17 @@ function selectSection(event) {
         section === null || section === void 0 ? void 0 : section.classList.add("is-visible");
     }
 }
+function clearInputs() {
+    const form = document.getElementById("event-form");
+    const allv = document.getElementsByClassName("variant-row");
+    for (let index = 0; index < allv.length; index++) {
+        const element = allv[index];
+        console.log(element);
+        element.remove();
+    }
+    variants = [];
+    form === null || form === void 0 ? void 0 : form.reset();
+}
 function addEvent(e) {
     const form = document.getElementById("event-form");
     e.preventDefault();
@@ -70,6 +81,8 @@ function addEvent(e) {
         updateStaticsSection();
         chart.destroy();
         renderGraph();
+        handleTable();
+        //============================
         saveEvent(allEvents);
         variants = [];
         form === null || form === void 0 ? void 0 : form.reset();
@@ -92,7 +105,6 @@ function addVariant() {
     (_a = document.getElementById("variants-list")) === null || _a === void 0 ? void 0 : _a.appendChild(div);
     console.log(div.children);
     div.children[4].addEventListener("click", () => {
-        console.log("click");
         div.remove();
     });
 }
@@ -163,17 +175,47 @@ function getEventsStorage() {
     if (savedObjs) {
         allEvents = JSON.parse(savedObjs) || [];
         updateStaticsSection();
+        handleTable();
     }
 }
-// function handleTable() {
-//     const tr = document.createElement("tr");
-// }
+function handleTable() {
+    var _a;
+    const tbody = document.querySelector(".table__body");
+    for (let i = 0; i < allEvents.length; i++) {
+        const ele = allEvents[i];
+        const tr = document.createElement("tr");
+        let li = "";
+        (_a = ele.variants) === null || _a === void 0 ? void 0 : _a.forEach((v) => {
+            li += `<li><span class="badge"> ${v.vName} || ${v.vQuantity} || ${v.vValue}</span></li> `;
+        });
+        tr.className = 'table__row';
+        tr.dataset.eventId = (i + 1).toString();
+        tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${ele.title}</td>
+        <td>${ele.numberOfSet}</td>
+        <td>$${ele.basePrice}</td>
+        <td>
+            <ul>
+               ${li}
+            </ul>
+        </td>
+        <td>
+            <button class="btn btn--small" data-action="details" data-event-id="${i + 1}">Details</button>
+            <button class="btn btn--small" data-action="edit" data-event-id="${i + 1}">Edit</button>
+            <button class="btn btn--danger btn--small" data-action="archive" data-event-id="${i + 1}">Delete</button>
+        </td>
+      `;
+        tbody === null || tbody === void 0 ? void 0 : tbody.appendChild(tr);
+    }
+}
 function init() {
-    var _a, _b;
+    var _a, _b, _c;
     getEventsStorage();
     renderGraph();
     document.querySelectorAll(".sidebar__btn").forEach(btn => btn.addEventListener("click", selectSection));
     (_a = document.querySelector(".form__actions button.btn--primary")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", addEvent);
-    (_b = document.getElementById("btn-add-variant")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", addVariant);
+    (_b = document.querySelector("button.btn--ghost")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", clearInputs);
+    (_c = document.getElementById("btn-add-variant")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", addVariant);
 }
 init();
