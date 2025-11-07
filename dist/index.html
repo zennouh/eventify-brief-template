@@ -122,6 +122,16 @@
                     class="input"
                     placeholder="https://example.com/image.jpg"
                   />
+                  <!-- <input type="file" id="imageInput" accept="image/*" />
+                            -->
+                  <div>
+                    <img
+                      id="preview"
+                      src=""
+                      alt="Image Preview"
+                      class="is-hidden"
+                    />
+                  </div>
                 </div>
 
                 <!-- Description -->
@@ -176,7 +186,6 @@
                       type="button"
                       class="btn btn--small"
                       id="btn-add-variant"
-                     
                     >
                       + Add Variant
                     </button>
@@ -236,6 +245,8 @@
                 <thead class="table__head">
                   <tr>
                     <th>#</th>
+                    <th>cover</th>
+
                     <th>Title</th>
                     <th>Seats</th>
                     <th>Price</th>
@@ -264,8 +275,13 @@
 
               <!-- Pagination -->
               <div class="pagination" id="events-pagination">
-                <!-- JS will generate pagination buttons -->
-
+                <button class="pagination__btn is-disabled">← Prev</button>
+                <div id="navigationBtn">
+                  <!-- <button class="pagination__btn is-active">1</button>
+                  <button class="pagination__btn">2</button>
+                  <button class="pagination__btn">3</button> -->
+                </div>
+                <button class="pagination__btn">Next →</button>
               </div>
             </div>
           </section>

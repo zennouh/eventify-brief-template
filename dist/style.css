@@ -35,8 +35,9 @@
   --shadow-lg: 0 4px 16px var(--color-shadow);
 
   /* Fonts */
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  --font-mono: "Courier New", monospace;
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  --font-mono: 'Courier New', monospace;
 
   /* Z-index */
   --z-modal: 1000;
@@ -274,6 +275,13 @@ h6 {
   font-weight: 600;
   margin-bottom: var(--spacing-sm);
   font-size: 14px;
+}
+
+#preview {
+  max-width: 300px;
+  max-height: 300px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
 }
 
 .input,

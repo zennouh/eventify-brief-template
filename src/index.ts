@@ -1,158 +1,180 @@
-import * as ChartJs from "chart.js";
+import * as ChartJs from 'chart.js'
 
-
-const allEventsKey = "eventsKey";
+const allEventsKey = 'eventsKey'
 interface IVariant {
-    vName: string,
-    vQuantity: number,
-    vValue: number,
-    isFixed: boolean,
+  vName: string
+  vQuantity: number
+  vValue: number
+  isFixed: boolean
 }
 
 interface IEvent {
-    title: string,
-    imageUrl: string,
-    description: string,
-    numberOfSet: number,
-    basePrice: number,
-    variants?: IVariant[],
+  title: string
+  imageUrl: string
+  description: string
+  numberOfSet: number
+  basePrice: number
+  variants?: IVariant[]
 }
 
 interface IStatics {
-    totalEvent: number;
-    totalSeat: number;
-    totalRevenue: number;
+  totalEvent: number
+  totalSeat: number
+  totalRevenue: number
 }
 
-let allEvents: IEvent[] = [];
-let variants: IVariant[] = [];
-let chart: ChartJs;
+let allEvents: IEvent[] = []
+let subEvents: IEvent[] = []
+
+let variants: IVariant[] = []
+let chart: ChartJs
+let currentPage = 1
+const eventPerPage = 3
+let maxPages: number
 
 // @ts-ignore
-ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
-);
-
+ChartJs.Chart.register.apply(
+  null,
+  Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
+)
 
 function renderGraph() {
+  const labels: string[] = Array.from(
+    { length: allEvents.length },
+    (_, index) => index.toString()
+  )
+  const data: number[] = Array.from(
+    { length: allEvents.length },
+    (_, index) => allEvents[index].numberOfSet
+  )
+  const ctx = document.getElementById('myChart') as HTMLCanvasElement
 
-    const labels: string[] = Array.from({ length: allEvents.length }, (_, index) => index.toString());
-    const data: number[] =
-        Array.from({ length: allEvents.length }, (_, index) => allEvents[index].numberOfSet);
-    const ctx = document.getElementById("myChart") as HTMLCanvasElement;
-
-
-    chart = new ChartJs.Chart(ctx, {
-        type: "line",
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: "# of seats",
-                    data: data,
-                    borderWidth: 1,
-                },
-            ],
+  chart = new ChartJs.Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: '# of seats',
+          data: data,
+          borderWidth: 1,
         },
-    });
-
+      ],
+    },
+  })
 }
 
-
 function calculateStatics(): IStatics {
-    let totalEvent = allEvents.length;
-    let totalSeat = 0;
-    let totalRevenue = 0;
-    for (const e of allEvents) {
-        totalSeat += e.numberOfSet;
-        totalRevenue += e.basePrice
-    }
-    return { totalEvent, totalSeat, totalRevenue }
+  let totalEvent = allEvents.length
+  let totalSeat = 0
+  let totalRevenue = 0
+  for (const e of allEvents) {
+    totalSeat += e.numberOfSet
+    totalRevenue += e.basePrice
+  }
+  return { totalEvent, totalSeat, totalRevenue }
 }
 
 function updateStaticsSection() {
-    let statics: IStatics = calculateStatics();
-    document.getElementById("stat-total-events")!.textContent = statics.totalEvent.toString();
-    document.getElementById("stat-total-seats")!.textContent = statics.totalSeat.toString();
-    document.getElementById("stat-total-price")!.textContent = `$${statics.totalRevenue}`
-
+  let statics: IStatics = calculateStatics()
+  document.getElementById('stat-total-events')!.textContent =
+    statics.totalEvent.toString()
+  document.getElementById('stat-total-seats')!.textContent =
+    statics.totalSeat.toString()
+  document.getElementById(
+    'stat-total-price'
+  )!.textContent = `$${statics.totalRevenue}`
 }
-
 
 function selectSection(event: any) {
+  const div = document.getElementsByClassName('is-visible')[0]
+  if (div) {
+    div.classList.remove('is-visible')
 
-    const div = document.getElementsByClassName("is-visible")[0];
-    if (div) {
-        div.classList.remove("is-visible");
-
-        const allBtns = document.getElementsByClassName("sidebar__btn");
-        for (let index = 0; index < allBtns.length; index++) {
-            allBtns[index]!.classList.remove("is-active")
-        }
-        event.currentTarget!.classList.add("is-active");
-
-        console.log("erihgsddfrgrdg");
-
-        const data = event.currentTarget!.dataset.screen;
-        const section = document.querySelector(`section[data-screen="${data}"]`)
-        section?.classList.add("is-visible");
-
+    const allBtns = document.getElementsByClassName('sidebar__btn')
+    for (let index = 0; index < allBtns.length; index++) {
+      allBtns[index]!.classList.remove('is-active')
     }
+    event.currentTarget!.classList.add('is-active')
 
+    console.log('erihgsddfrgrdg')
 
+    const data = event.currentTarget!.dataset.screen
+    const section = document.querySelector(`section[data-screen="${data}"]`)
+    section?.classList.add('is-visible')
+  }
 }
-
 
 function clearInputs() {
-    const form = document.getElementById("event-form") as HTMLFormElement;
-    const allv = document.getElementsByClassName("variant-row");
-    for (let index = 0; index < allv.length; index++) {
-        const element = allv[index];
-        console.log(element);
+  const form = document.getElementById('event-form') as HTMLFormElement
+  const allv = document.getElementsByClassName('variant-row')
+  for (let index = 0; index < allv.length; index++) {
+    const element = allv[index]
+    console.log(element)
 
-        element.remove();
-    }
-    variants = [];
-    form?.reset();
+    element.remove()
+  }
+  variants = []
+  form?.reset()
 }
-
 
 function addEvent(e: Event) {
-    const form = document.getElementById("event-form") as HTMLFormElement;
+  const form = document.getElementById('event-form') as HTMLFormElement
 
-    e.preventDefault();
+  e.preventDefault()
 
-    const title = (document.getElementById("event-title")! as HTMLInputElement).value.trim();
-    const imageUrl = (document.getElementById("event-image") as HTMLInputElement).value.trim();
-    const description = (document.getElementById("event-description") as HTMLInputElement).value.trim();
-    const numberOfSet = Number((document.getElementById("event-seats") as HTMLInputElement).value);
-    const basePrice = Number((document.getElementById("event-price") as HTMLInputElement).value);
+  const title = (
+    document.getElementById('event-title')! as HTMLInputElement
+  ).value.trim()
+  const imageUrl = (
+    document.getElementById('event-image') as HTMLInputElement
+  ).value.trim()
+  const description = (
+    document.getElementById('event-description') as HTMLInputElement
+  ).value.trim()
+  const numberOfSet = Number(
+    (document.getElementById('event-seats') as HTMLInputElement).value
+  )
+  const basePrice = Number(
+    (document.getElementById('event-price') as HTMLInputElement).value
+  )
 
-
-    const isInvalid = HandleInvalidInputs(title, imageUrl, description, numberOfSet, basePrice);
-    if (!isInvalid) {
-        extractDataFromVar();
-        const event: IEvent = { title, imageUrl, description, numberOfSet, basePrice, variants };
-        allEvents.push(event);
-        updateStaticsSection();
-        chart.destroy();
-        renderGraph();
-        handleTable()
-
-
-        //============================
-        saveEvent(allEvents);
-        variants = [];
-        form?.reset();
+  const isInvalid = HandleInvalidInputs(
+    title,
+    imageUrl,
+    description,
+    numberOfSet,
+    basePrice
+  )
+  if (!isInvalid) {
+    extractDataFromVar()
+    const event: IEvent = {
+      title,
+      imageUrl,
+      description,
+      numberOfSet,
+      basePrice,
+      variants,
     }
+    allEvents.push(event)
+    console.log('variants: ', variants)
+    updateStaticsSection()
+    chart.destroy()
+    renderGraph()
 
+    handleTable(1)
+
+    //============================
+    saveEvent(allEvents)
+    variants = []
+    form?.reset()
+  }
 }
 
-
 function addVariant() {
-
-    let div = document.createElement("div");
-    div.className = "variant-row"
-    div.innerHTML = `
+  let div = document.createElement('div')
+  div.className = 'variant-row'
+  div.innerHTML = `
     <input type="text" class="input variant-row__name" placeholder="Variant name (e.g., 'Early Bird')" />
     <input type="number" class="input variant-row__qty" placeholder="Qty" min="1" />
     <input type="number" class="input variant-row__value" placeholder="Value" step="0.01" />
@@ -163,113 +185,232 @@ function addVariant() {
     <button type="button" class="btn btn--danger btn--small variant-row__remove">Remove</button>
     `
 
-    document.getElementById("variants-list")?.appendChild(div)
-    console.log(div.children);
+  document.getElementById('variants-list')?.appendChild(div)
+  console.log(div.children)
 
-    div.children[4].addEventListener("click", () => {
-        div.remove();
-    })
-
+  div.children[4].addEventListener('click', () => {
+    div.remove()
+  })
 }
 
 function extractDataFromVar() {
+  const allVars = document.getElementById('variants-list')
+  const childs = allVars?.children
+  if (childs?.length == 0) {
+    return
+  }
+  console.log('extractDataFromVar: ', childs?.length)
 
-    const allVars = document.getElementById("variants-list")?.children
-    if (allVars?.length == 0) {
-        return;
-    }
-    for (let index = 0; index < allVars!.length; index++) {
-        const element = allVars![index];
-        const vName = (document.getElementsByClassName("input variant-row__name")[0] as HTMLInputElement).value;
-        const vQuantity = (document.getElementsByClassName("input variant-row__qty")[0] as HTMLInputElement).value
-        const vValue = (document.getElementsByClassName("input variant-row__value")[0] as HTMLInputElement).value
-        const mySelect = document.getElementsByClassName("select variant-row__type")[0] as HTMLSelectElement;
-        const isFixed = mySelect?.value == "fixed";
+  for (let index = 0; index < childs!.length; index++) {
+    const vName = (
+      document.getElementsByClassName('input variant-row__name')[
+        index
+      ] as HTMLInputElement
+    ).value
+    const vQuantity = (
+      document.getElementsByClassName('input variant-row__qty')[
+        index
+      ] as HTMLInputElement
+    ).value
+    const vValue = (
+      document.getElementsByClassName('input variant-row__value')[
+        index
+      ] as HTMLInputElement
+    ).value
+    const mySelect = document.getElementsByClassName(
+      'select variant-row__type'
+    )[index] as HTMLSelectElement
+    const isFixed = mySelect?.value == 'fixed'
 
-        variants?.push({ vName, vQuantity: Number(vQuantity), vValue: Number(vValue), isFixed })
-        document.getElementById("variants-list")?.removeChild(element);
-    }
-
+    variants?.push({
+      vName,
+      vQuantity: Number(vQuantity),
+      vValue: Number(vValue),
+      isFixed,
+    })
+  }
+  allVars!.innerHTML = ''
 }
 
+function HandleInvalidInputs(
+  title: string,
+  imageUrl: string,
+  description: string,
+  numberOfSet: number,
+  basePrice: number
+) {
+  const titleTest = title == ''
+  const imageUrlTest = imageUrl == ''
+  const descriptionTest = description == ''
+  const numberOfSetTest = numberOfSet >= 0
+  const basePriceTest = basePrice >= 0
 
-function HandleInvalidInputs(title: string, imageUrl: string, description: string, numberOfSet: number, basePrice: number,) {
+  const errorDiv = document.getElementById('form-errors')
+  errorDiv!.innerHTML = ''
 
-    const titleTest = title == "";
-    const imageUrlTest = imageUrl == "";
-    const descriptionTest = description == "";
-    const numberOfSetTest = numberOfSet >= 0;
-    const basePriceTest = basePrice >= 0;
+  if (
+    titleTest ||
+    imageUrlTest ||
+    descriptionTest ||
+    !numberOfSetTest ||
+    !basePriceTest
+  ) {
+    // alert("S'il vous plain, saisir valid number")
+    errorDiv?.classList.remove('is-hidden')
+    const paragraph = document.createElement('p')
+    paragraph.style.fontSize = '15px'
+    paragraph.style.fontWeight = 'bold'
 
-
-    const errorDiv = document.getElementById("form-errors");
-    errorDiv!.innerHTML = "";
-
-    if (titleTest || imageUrlTest || descriptionTest || !numberOfSetTest || !basePriceTest) {
-        // alert("S'il vous plain, saisir valid number")
-        errorDiv?.classList.remove("is-hidden");
-        const paragraph = document.createElement("p");
-        paragraph.style.fontSize = "15px"
-        paragraph.style.fontWeight = "bold"
-
-        paragraph!.innerHTML! = "<p>S'il vous plain, vous avez des error suivant:</p>";
-        const ul = document.createElement("ul");
-        ul.style.marginLeft = "30px"
-        if (titleTest) {
-            ul.innerHTML += "<li>Invalid text</li>"
-        }
-        if (imageUrlTest) {
-            ul.innerHTML += "<li>Invalid image</li>"
-        }
-        if (descriptionTest) {
-            ul.innerHTML += "<li>Invalid desc</li>"
-        }
-        if (numberOfSetTest) {
-            ul.innerHTML += "<li>Invalid number of set</li>"
-        }
-        if (basePriceTest) {
-            ul.innerHTML += "<li>Invalid base price</li>"
-        }
-        errorDiv?.appendChild(paragraph);
-        errorDiv?.appendChild(ul);
-        return true;
-    } else {
-        errorDiv?.classList.add("is-hidden");
-        return false;
+    paragraph!.innerHTML! =
+      "<p>S'il vous plain, vous avez des error suivant:</p>"
+    const ul = document.createElement('ul')
+    ul.style.marginLeft = '30px'
+    if (titleTest) {
+      ul.innerHTML += '<li>Invalid text</li>'
     }
+    if (imageUrlTest) {
+      ul.innerHTML += '<li>Invalid image</li>'
+    }
+    if (descriptionTest) {
+      ul.innerHTML += '<li>Invalid desc</li>'
+    }
+    if (numberOfSetTest) {
+      ul.innerHTML += '<li>Invalid number of set</li>'
+    }
+    if (basePriceTest) {
+      ul.innerHTML += '<li>Invalid base price</li>'
+    }
+    errorDiv?.appendChild(paragraph)
+    errorDiv?.appendChild(ul)
+    return true
+  } else {
+    errorDiv?.classList.add('is-hidden')
+    return false
+  }
 }
-
-
 
 function saveEvent(events: IEvent[]) {
-    let strObjs: string = JSON.stringify(events);
-    localStorage.setItem(allEventsKey, strObjs)
+  let strObjs: string = JSON.stringify(events)
+  localStorage.setItem(allEventsKey, strObjs)
 }
 
 function getEventsStorage() {
-    let savedObjs: string = localStorage.getItem(allEventsKey) || "";
-    if (savedObjs) {
-        allEvents = JSON.parse(savedObjs) || [];
-        updateStaticsSection();
-        handleTable();
-    }
+  let savedObjs: string = localStorage.getItem(allEventsKey) || ''
+  if (savedObjs) {
+    allEvents = JSON.parse(savedObjs) || []
+    updateStaticsSection()
+
+    handleTable(1)
+  }
 }
 
+function initNextPrevBtns() {
+  const prev = Array.from(document.querySelectorAll('.pagination__btn')).filter(
+    (v) => v.textContent.includes('Prev')
+  )[0]
+  const next = Array.from(document.querySelectorAll('.pagination__btn')).filter(
+    (v) => v.textContent.includes('Next')
+  )[0]
 
-function handleTable() {
-    const tbody = document.querySelector(".table__body")
-    for (let i = 0; i < allEvents.length; i++) {
-        const ele = allEvents[i]
-        const tr = document.createElement("tr");
-        let li: string = "";
-        
-        ele.variants?.forEach((v) => {
-            li += `<li><span class="badge"> ${v.vName} || ${v.vQuantity} || ${v.vValue}</span></li> `;
-        })
-        tr.className = 'table__row';
-        tr.dataset.eventId = (i + 1).toString()
-        tr.innerHTML = `
+  prev.addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--
+      handleTable(currentPage)
+    }
+  })
+  next.addEventListener('click', () => {
+    if (currentPage < maxPages) {
+      currentPage++
+      handleTable(currentPage)
+    }
+  })
+}
+
+function createPaginationBtns() {
+  const navigationBtn = document.getElementById('navigationBtn')
+  navigationBtn!.innerHTML = ''
+
+  maxPages = parseInt((allEvents.length / eventPerPage).toString()) + 1
+
+  // const pagination = document.getElementById('events-pagination')
+
+  for (let index = 0; index < maxPages; index++) {
+    const button = document.createElement('button')
+    if (index == currentPage - 1) {
+      button.className = 'pagination__btn is-active'
+    } else {
+      button.className = 'pagination__btn'
+    }
+    button.innerHTML = `${index + 1}`
+    button.addEventListener('click', () => {
+      handleTable(index + 1)
+    })
+    navigationBtn?.appendChild(button)
+  }
+}
+
+function pagination(page = 1, searchList: IEvent[] = []) {
+  //   const page = 1
+  currentPage = page
+  let events: IEvent[] = []
+  if (searchList.length === 0) {
+    events = allEvents
+  } else {
+    events = searchList
+  }
+  const maxPages = parseInt((events.length / eventPerPage).toString()) + 1
+
+  let skip = (page - 1) * eventPerPage
+
+  if (eventPerPage > events.length) {
+    subEvents = events
+    return
+  }
+
+  for (let i = 0; i < eventPerPage; i++) {
+    subEvents[i] = events[i + skip]
+  }
+  const prev = Array.from(document.querySelectorAll('.pagination__btn')).filter(
+    (v) => v.textContent.includes('Prev')
+  )[0]
+  const next = Array.from(document.querySelectorAll('.pagination__btn')).filter(
+    (v) => v.textContent.includes('Next')
+  )[0]
+  if (currentPage == 1) {
+    prev.classList.add('is-disabled')
+  } else {
+    prev.classList.remove('is-disabled')
+  }
+  if (currentPage == maxPages) {
+    next.classList.add('is-disabled')
+  } else {
+    next.classList.remove('is-disabled')
+  }
+}
+
+function handleTable(page: number, searchList: IEvent[] = []) {
+  pagination(page, searchList)
+  createPaginationBtns()
+  const tbody = document.querySelector('.table__body')
+  tbody!.innerHTML = ''
+  for (let i = 0; i < subEvents.length; i++) {
+    const ele = subEvents[i]
+    const tr = document.createElement('tr')
+    let li: string = ''
+
+    if (ele?.variants != undefined) {
+      ele.variants!.forEach((v) => {
+        li += `<li><span class="badge"> ${v.vName} || ${v.vQuantity} || ${v.vValue}</span></li> `
+      })
+    }
+
+    tr.className = 'table__row'
+    tr.dataset.eventId = (i + 1).toString()
+    tr.innerHTML = `
         <td>${i + 1}</td>
+        <td style="width: 100px; height: !00px;"> <img src="${
+          ele.imageUrl
+        }" alt="" style="height="100px"; width="100%";  object-fit: fill;"></td>
         <td>${ele.title}</td>
         <td>${ele.numberOfSet}</td>
         <td>$${ele.basePrice}</td>
@@ -279,24 +420,90 @@ function handleTable() {
             </ul>
         </td>
         <td>
-            <button class="btn btn--small" data-action="details" data-event-id="${i + 1}">Details</button>
-            <button class="btn btn--small" data-action="edit" data-event-id="${i + 1}">Edit</button>
-            <button class="btn btn--danger btn--small" data-action="archive" data-event-id="${i + 1}">Delete</button>
+            <button class="btn btn--small" data-action="details" data-event-id="${
+              i + 1
+            }">Details</button>
+            <button class="btn btn--small" data-action="edit" data-event-id="${
+              i + 1
+            }">Edit</button>
+            <button class="btn btn--danger btn--small" data-action="archive" data-event-id="${
+              i + 1
+            }">Delete</button>
         </td>
       `
-        tbody?.appendChild(tr);
-    }
+    tbody?.appendChild(tr)
+  }
 }
 
+function searchByTitle() {
+  let seachList: IEvent[] = []
+  const input = document.getElementById('search-events') as HTMLInputElement
+
+  input.addEventListener('input', () => {
+    const searchValue = input.value || ''
+    console.log('click on it', searchValue)
+    for (let i = 0; i < allEvents.length; i++) {
+      const element = allEvents[i]
+      if (element.title.includes(searchValue)) {
+        seachList.push(element)
+      }
+    }
+    handleTable(1, seachList)
+    seachList = []
+  })
+}
+
+function imageFocusOut() {
+  const preview = document.getElementById('preview') as HTMLImageElement
+  const imageEvent = document.getElementById('event-image')
+  imageEvent?.addEventListener('focusout', (event) => {
+    const value = (event.currentTarget as HTMLInputElement).value
+    preview.src = value
+    preview.classList.remove('is-hidden')
+  })
+}
 
 function init() {
-    getEventsStorage();
-    renderGraph();
-    document.querySelectorAll(".sidebar__btn").forEach(btn => btn.addEventListener("click", selectSection));
-    document.querySelector(".form__actions button.btn--primary")?.addEventListener("click", addEvent);
-    document.querySelector("button.btn--ghost")?.addEventListener("click", clearInputs);
-    document.getElementById("btn-add-variant")?.addEventListener("click", addVariant);
+  getEventsStorage()
+  renderGraph()
+  imageFocusOut()
+  initNextPrevBtns()
+  searchByTitle()
 
+  //   uploadImage();
+  document
+    .querySelectorAll('.sidebar__btn')
+    .forEach((btn) => btn.addEventListener('click', selectSection))
+  document
+    .querySelector('.form__actions button.btn--primary')
+    ?.addEventListener('click', addEvent)
+  document
+    .querySelector('button.btn--ghost')
+    ?.addEventListener('click', clearInputs)
+  document
+    .getElementById('btn-add-variant')
+    ?.addEventListener('click', addVariant)
 }
 
-init();
+init()
+
+// function uploadImage() {
+//   const imageInput = document.getElementById('imageInput')
+//   const preview = document.getElementById('preview') as HTMLImageElement
+
+//   imageInput?.addEventListener('change', (event) => {
+//     const target = event.target as HTMLInputElement // cast here
+//     const file = target.files?.[0]
+//     if (file) {
+//       const reader = new FileReader()
+//       reader.onload = (e) => {
+//         preview!.src = e.target?.result as string // cast to string
+//         console.log("result: ", e.target?.result);
+
+//       }
+//       reader.readAsDataURL(file)
+//     } else {
+//       preview.src = '' // clear if no file
+//     }
+//   })
+// }
