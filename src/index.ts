@@ -33,9 +33,7 @@ const eventPerPage = 3
 let maxPages: number
 
 // @ts-ignore
-ChartJs.Chart.register.apply(
-  null,
-  Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
+ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
 )
 
 function renderGraph() {
@@ -96,8 +94,6 @@ function selectSection(event: any) {
       allBtns[index]!.classList.remove('is-active')
     }
     event.currentTarget!.classList.add('is-active')
-
-    console.log('erihgsddfrgrdg')
 
     const data = event.currentTarget!.dataset.screen
     const section = document.querySelector(`section[data-screen="${data}"]`)
@@ -204,17 +200,17 @@ function extractDataFromVar() {
   for (let index = 0; index < childs!.length; index++) {
     const vName = (
       document.getElementsByClassName('input variant-row__name')[
-        index
+      index
       ] as HTMLInputElement
     ).value
     const vQuantity = (
       document.getElementsByClassName('input variant-row__qty')[
-        index
+      index
       ] as HTMLInputElement
     ).value
     const vValue = (
       document.getElementsByClassName('input variant-row__value')[
-        index
+      index
       ] as HTMLInputElement
     ).value
     const mySelect = document.getElementsByClassName(
@@ -288,6 +284,8 @@ function HandleInvalidInputs(
     return false
   }
 }
+
+
 
 function saveEvent(events: IEvent[]) {
   let strObjs: string = JSON.stringify(events)
@@ -388,6 +386,18 @@ function pagination(page = 1, searchList: IEvent[] = []) {
   }
 }
 
+function varTableHover() {
+
+
+  alert("te");
+  const varTable = document.getElementById("varTable")
+  varTable!.style!.position = "absolute"
+  varTable?.classList.remove("is-hidden")
+
+
+
+}
+
 function handleTable(page: number, searchList: IEvent[] = []) {
   pagination(page, searchList)
   createPaginationBtns()
@@ -395,42 +405,13 @@ function handleTable(page: number, searchList: IEvent[] = []) {
   tbody!.innerHTML = ''
   for (let i = 0; i < subEvents.length; i++) {
     const ele = subEvents[i]
-    const tr = document.createElement('tr')
-    let li: string = ''
+    // const tr = document.createElement('tr')
+    // let li: string = ''
 
-    if (ele?.variants != undefined) {
-      ele.variants!.forEach((v) => {
-        li += `<li><span class="badge"> ${v.vName} || ${v.vQuantity} || ${v.vValue}</span></li> `
-      })
-    }
 
-    tr.className = 'table__row'
-    tr.dataset.eventId = (i + 1).toString()
-    tr.innerHTML = `
-        <td>${i + 1}</td>
-        <td style="width: 100px; height: !00px;"> <img src="${
-          ele.imageUrl
-        }" alt="" style="height="100px"; width="100%";  object-fit: fill;"></td>
-        <td>${ele.title}</td>
-        <td>${ele.numberOfSet}</td>
-        <td>$${ele.basePrice}</td>
-        <td>
-            <ul>
-               ${li}
-            </ul>
-        </td>
-        <td>
-            <button class="btn btn--small" data-action="details" data-event-id="${
-              i + 1
-            }">Details</button>
-            <button class="btn btn--small" data-action="edit" data-event-id="${
-              i + 1
-            }">Edit</button>
-            <button class="btn btn--danger btn--small" data-action="archive" data-event-id="${
-              i + 1
-            }">Delete</button>
-        </td>
-      `
+
+    let tr = createTableEventRow(ele, i);
+
     tbody?.appendChild(tr)
   }
 }
@@ -456,10 +437,32 @@ function searchByTitle() {
 function imageFocusOut() {
   const preview = document.getElementById('preview') as HTMLImageElement
   const imageEvent = document.getElementById('event-image')
-  imageEvent?.addEventListener('focusout', (event) => {
+  imageEvent?.addEventListener('input', (event) => {
     const value = (event.currentTarget as HTMLInputElement).value
     preview.src = value
     preview.classList.remove('is-hidden')
+  })
+}
+
+function imgRadio() {
+  const inputRadios = document.querySelectorAll("input[name='imgType']")
+  const linkInput = document.querySelector("input[class*='link']");
+  const uploadInput = document.querySelector("input[class*='upload']");
+  inputRadios.forEach((r) => {
+    r.addEventListener("change", () => {
+      const value = (r as HTMLInputElement).value
+      if (value === "upload") {
+
+        uploadInput?.classList.remove("is-hidden")
+        linkInput?.classList.add("is-hidden")
+
+      } else {
+
+        linkInput?.classList.remove("is-hidden")
+        uploadInput?.classList.add("is-hidden")
+      }
+
+    })
   })
 }
 
@@ -469,6 +472,7 @@ function init() {
   imageFocusOut()
   initNextPrevBtns()
   searchByTitle()
+  imgRadio()
 
   //   uploadImage();
   document
@@ -507,3 +511,128 @@ init()
 //     }
 //   })
 // }
+
+
+
+
+
+
+
+function createTableEventRow(ele: IEvent, i: number) {
+  const tr = document.createElement('tr')
+
+  tr.className = 'table__row'
+  tr.dataset.eventId = (i + 1).toString()
+
+
+
+
+  const tdId = document.createElement('td');
+  tdId.textContent = `${i + 1}`;
+  tr.appendChild(tdId);
+
+
+  const tdImg = document.createElement('td');
+  tdImg.style.width = "100px"
+  tdImg.style.height = "100px"
+  tdImg.innerHTML = `<img src="${ele.imageUrl}"
+  alt="" style="height="100%"; width="100%";  object-fit: fill;">`;
+  tr.appendChild(tdImg);
+
+  const tdTitle = document.createElement('td');
+  tdTitle.textContent = `${ele.title}`;
+  tr.appendChild(tdTitle);
+
+
+  const tdSeats = document.createElement('td');
+  tdSeats.textContent = `${ele.numberOfSet}`;
+  tr.appendChild(tdSeats);
+
+  const tdPrice = document.createElement('td');
+  tdPrice.textContent = `${ele.basePrice}`;
+  tr.appendChild(tdPrice);
+
+
+
+  const tdVariants = document.createElement('td');
+  tdVariants.style.position = "relative";
+  const button = document.createElement('button');
+  button.id = `vari-${i + 1}`;
+  button.className = `btn btn--small`;
+  button.dataset.action = `details`;
+  button.textContent = `Variants`;
+  tdVariants.appendChild(button)
+  button.addEventListener('click', varTableHover);
+  let content: string = '';
+  ele.variants?.forEach((v) => {
+    content += `<tr>
+        <th>${v.vName}</th>
+        <th>${v.vQuantity}</th>
+        <th>${v.vValue}</th>
+        <th>${v.isFixed ? "fixrd" : "percent"}</th>
+      </tr>`
+  })
+
+  tdVariants.innerHTML += `
+  <table class="table is-hidden" id="varTable">
+    <thead class="table__head">
+      <tr>
+        <th>Title</th>
+        <th>Quantity</th>
+        <th>Value</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody class="table__body">
+      ${content}
+    </tbody>
+  </table>
+  `;
+  tr.appendChild(tdVariants)
+
+
+
+  //     <td>
+  //         <button class="btn btn--small" data-action="details" data-event-id="${i + 1
+  // }">Details</button>
+  //         <button class="btn btn--small" data-action="edit" data-event-id="${i + 1
+  // }">Edit</button>
+  //         <button class="btn btn--danger btn--small" data-action="archive" data-event-id="${i + 1
+  // }">Delete</button>
+  //     </td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // let trs: string = ''
+
+  // if (ele?.variants != undefined) {
+  //   ele.variants!.forEach((v) => {
+  //     // li += `<li><span class="badge"> ${v.vName} || ${v.vQuantity} || ${v.vValue}</span></li> `
+  //     trs = `
+  //     <tr class="table__row">
+  //       <td>${v.vName}</td>
+  //       <td>${v.vQuantity}</td>
+  //       <td>${v.vValue}</td>
+  //       <td>${v.isFixed ? "fixed" : "perCent"}</td>
+  //     </tr>
+  //     `
+  //   })
+  // }
+  return tr;
+
+}

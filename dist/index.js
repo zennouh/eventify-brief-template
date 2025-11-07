@@ -54,10 +54,9 @@ function selectSection(event) {
             allBtns[index].classList.remove('is-active');
         }
         event.currentTarget.classList.add('is-active');
-        console.log('erihgsddfrgrdg');
         const data = event.currentTarget.dataset.screen;
         const section = document.querySelector(`section[data-screen="${data}"]`);
-        section?.classList.add('is-visible');
+        section === null || section === void 0 ? void 0 : section.classList.add('is-visible');
     }
 }
 function clearInputs() {
@@ -69,7 +68,7 @@ function clearInputs() {
         element.remove();
     }
     variants = [];
-    form?.reset();
+    form === null || form === void 0 ? void 0 : form.reset();
 }
 function addEvent(e) {
     const form = document.getElementById('event-form');
@@ -99,10 +98,11 @@ function addEvent(e) {
         //============================
         saveEvent(allEvents);
         variants = [];
-        form?.reset();
+        form === null || form === void 0 ? void 0 : form.reset();
     }
 }
 function addVariant() {
+    var _a;
     let div = document.createElement('div');
     div.className = 'variant-row';
     div.innerHTML = `
@@ -115,7 +115,7 @@ function addVariant() {
         </select>
     <button type="button" class="btn btn--danger btn--small variant-row__remove">Remove</button>
     `;
-    document.getElementById('variants-list')?.appendChild(div);
+    (_a = document.getElementById('variants-list')) === null || _a === void 0 ? void 0 : _a.appendChild(div);
     console.log(div.children);
     div.children[4].addEventListener('click', () => {
         div.remove();
@@ -123,18 +123,18 @@ function addVariant() {
 }
 function extractDataFromVar() {
     const allVars = document.getElementById('variants-list');
-    const childs = allVars?.children;
-    if (childs?.length == 0) {
+    const childs = allVars === null || allVars === void 0 ? void 0 : allVars.children;
+    if ((childs === null || childs === void 0 ? void 0 : childs.length) == 0) {
         return;
     }
-    console.log('extractDataFromVar: ', childs?.length);
+    console.log('extractDataFromVar: ', childs === null || childs === void 0 ? void 0 : childs.length);
     for (let index = 0; index < childs.length; index++) {
         const vName = document.getElementsByClassName('input variant-row__name')[index].value;
         const vQuantity = document.getElementsByClassName('input variant-row__qty')[index].value;
         const vValue = document.getElementsByClassName('input variant-row__value')[index].value;
         const mySelect = document.getElementsByClassName('select variant-row__type')[index];
-        const isFixed = mySelect?.value == 'fixed';
-        variants?.push({
+        const isFixed = (mySelect === null || mySelect === void 0 ? void 0 : mySelect.value) == 'fixed';
+        variants === null || variants === void 0 ? void 0 : variants.push({
             vName,
             vQuantity: Number(vQuantity),
             vValue: Number(vValue),
@@ -157,7 +157,7 @@ function HandleInvalidInputs(title, imageUrl, description, numberOfSet, basePric
         !numberOfSetTest ||
         !basePriceTest) {
         // alert("S'il vous plain, saisir valid number")
-        errorDiv?.classList.remove('is-hidden');
+        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.classList.remove('is-hidden');
         const paragraph = document.createElement('p');
         paragraph.style.fontSize = '15px';
         paragraph.style.fontWeight = 'bold';
@@ -180,12 +180,12 @@ function HandleInvalidInputs(title, imageUrl, description, numberOfSet, basePric
         if (basePriceTest) {
             ul.innerHTML += '<li>Invalid base price</li>';
         }
-        errorDiv?.appendChild(paragraph);
-        errorDiv?.appendChild(ul);
+        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.appendChild(paragraph);
+        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.appendChild(ul);
         return true;
     }
     else {
-        errorDiv?.classList.add('is-hidden');
+        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.classList.add('is-hidden');
         return false;
     }
 }
@@ -234,7 +234,7 @@ function createPaginationBtns() {
         button.addEventListener('click', () => {
             handleTable(index + 1);
         });
-        navigationBtn?.appendChild(button);
+        navigationBtn === null || navigationBtn === void 0 ? void 0 : navigationBtn.appendChild(button);
     }
 }
 function pagination(page = 1, searchList = []) {
@@ -271,6 +271,12 @@ function pagination(page = 1, searchList = []) {
         next.classList.remove('is-disabled');
     }
 }
+function varTableHover() {
+    alert("te");
+    const varTable = document.getElementById("varTable");
+    varTable.style.position = "absolute";
+    varTable === null || varTable === void 0 ? void 0 : varTable.classList.remove("is-hidden");
+}
 function handleTable(page, searchList = []) {
     pagination(page, searchList);
     createPaginationBtns();
@@ -278,33 +284,10 @@ function handleTable(page, searchList = []) {
     tbody.innerHTML = '';
     for (let i = 0; i < subEvents.length; i++) {
         const ele = subEvents[i];
-        const tr = document.createElement('tr');
-        let li = '';
-        if (ele?.variants != undefined) {
-            ele.variants.forEach((v) => {
-                li += `<li><span class="badge"> ${v.vName} || ${v.vQuantity} || ${v.vValue}</span></li> `;
-            });
-        }
-        tr.className = 'table__row';
-        tr.dataset.eventId = (i + 1).toString();
-        tr.innerHTML = `
-        <td>${i + 1}</td>
-        <td style="width: 100px; height: !00px;"> <img src="${ele.imageUrl}" alt="" style="height="100px"; width="100%";  object-fit: fill;"></td>
-        <td>${ele.title}</td>
-        <td>${ele.numberOfSet}</td>
-        <td>$${ele.basePrice}</td>
-        <td>
-            <ul>
-               ${li}
-            </ul>
-        </td>
-        <td>
-            <button class="btn btn--small" data-action="details" data-event-id="${i + 1}">Details</button>
-            <button class="btn btn--small" data-action="edit" data-event-id="${i + 1}">Edit</button>
-            <button class="btn btn--danger btn--small" data-action="archive" data-event-id="${i + 1}">Delete</button>
-        </td>
-      `;
-        tbody?.appendChild(tr);
+        // const tr = document.createElement('tr')
+        // let li: string = ''
+        let tr = createTableEventRow(ele, i);
+        tbody === null || tbody === void 0 ? void 0 : tbody.appendChild(tr);
     }
 }
 function searchByTitle() {
@@ -326,31 +309,48 @@ function searchByTitle() {
 function imageFocusOut() {
     const preview = document.getElementById('preview');
     const imageEvent = document.getElementById('event-image');
-    imageEvent?.addEventListener('focusout', (event) => {
+    imageEvent === null || imageEvent === void 0 ? void 0 : imageEvent.addEventListener('input', (event) => {
         const value = event.currentTarget.value;
         preview.src = value;
         preview.classList.remove('is-hidden');
     });
 }
+function imgRadio() {
+    const inputRadios = document.querySelectorAll("input[name='imgType']");
+    const linkInput = document.querySelector("input[class*='link']");
+    const uploadInput = document.querySelector("input[class*='upload']");
+    inputRadios.forEach((r) => {
+        r.addEventListener("change", () => {
+            const value = r.value;
+            if (value === "upload") {
+                uploadInput === null || uploadInput === void 0 ? void 0 : uploadInput.classList.remove("is-hidden");
+                linkInput === null || linkInput === void 0 ? void 0 : linkInput.classList.add("is-hidden");
+            }
+            else {
+                linkInput === null || linkInput === void 0 ? void 0 : linkInput.classList.remove("is-hidden");
+                uploadInput === null || uploadInput === void 0 ? void 0 : uploadInput.classList.add("is-hidden");
+            }
+        });
+    });
+}
 function init() {
+    var _a, _b, _c;
     getEventsStorage();
     renderGraph();
     imageFocusOut();
     initNextPrevBtns();
     searchByTitle();
+    imgRadio();
     //   uploadImage();
     document
         .querySelectorAll('.sidebar__btn')
         .forEach((btn) => btn.addEventListener('click', selectSection));
-    document
-        .querySelector('.form__actions button.btn--primary')
-        ?.addEventListener('click', addEvent);
-    document
-        .querySelector('button.btn--ghost')
-        ?.addEventListener('click', clearInputs);
-    document
-        .getElementById('btn-add-variant')
-        ?.addEventListener('click', addVariant);
+    (_a = document
+        .querySelector('.form__actions button.btn--primary')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', addEvent);
+    (_b = document
+        .querySelector('button.btn--ghost')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', clearInputs);
+    (_c = document
+        .getElementById('btn-add-variant')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', addVariant);
 }
 init();
 // function uploadImage() {
@@ -371,3 +371,84 @@ init();
 //     }
 //   })
 // }
+function createTableEventRow(ele, i) {
+    var _a;
+    const tr = document.createElement('tr');
+    tr.className = 'table__row';
+    tr.dataset.eventId = (i + 1).toString();
+    const tdId = document.createElement('td');
+    tdId.textContent = `${i + 1}`;
+    tr.appendChild(tdId);
+    const tdImg = document.createElement('td');
+    tdImg.style.width = "100px";
+    tdImg.style.height = "100px";
+    tdImg.innerHTML = `<img src="${ele.imageUrl}"
+  alt="" style="height="100%"; width="100%";  object-fit: fill;">`;
+    tr.appendChild(tdImg);
+    const tdTitle = document.createElement('td');
+    tdTitle.textContent = `${ele.title}`;
+    tr.appendChild(tdTitle);
+    const tdSeats = document.createElement('td');
+    tdSeats.textContent = `${ele.numberOfSet}`;
+    tr.appendChild(tdSeats);
+    const tdPrice = document.createElement('td');
+    tdPrice.textContent = `${ele.basePrice}`;
+    tr.appendChild(tdPrice);
+    const tdVariants = document.createElement('td');
+    tdVariants.style.position = "relative";
+    const button = document.createElement('button');
+    button.id = `vari-${i + 1}`;
+    button.className = `btn btn--small`;
+    button.dataset.action = `details`;
+    button.textContent = `Variants`;
+    tdVariants.appendChild(button);
+    button.addEventListener('click', varTableHover);
+    let content = '';
+    (_a = ele.variants) === null || _a === void 0 ? void 0 : _a.forEach((v) => {
+        content += `<tr>
+        <th>${v.vName}</th>
+        <th>${v.vQuantity}</th>
+        <th>${v.vValue}</th>
+        <th>${v.isFixed ? "fixrd" : "percent"}</th>
+      </tr>`;
+    });
+    tdVariants.innerHTML += `
+  <table class="table is-hidden" id="varTable">
+    <thead class="table__head">
+      <tr>
+        <th>Title</th>
+        <th>Quantity</th>
+        <th>Value</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody class="table__body">
+      ${content}
+    </tbody>
+  </table>
+  `;
+    tr.appendChild(tdVariants);
+    //     <td>
+    //         <button class="btn btn--small" data-action="details" data-event-id="${i + 1
+    // }">Details</button>
+    //         <button class="btn btn--small" data-action="edit" data-event-id="${i + 1
+    // }">Edit</button>
+    //         <button class="btn btn--danger btn--small" data-action="archive" data-event-id="${i + 1
+    // }">Delete</button>
+    //     </td>
+    // let trs: string = ''
+    // if (ele?.variants != undefined) {
+    //   ele.variants!.forEach((v) => {
+    //     // li += `<li><span class="badge"> ${v.vName} || ${v.vQuantity} || ${v.vValue}</span></li> `
+    //     trs = `
+    //     <tr class="table__row">
+    //       <td>${v.vName}</td>
+    //       <td>${v.vQuantity}</td>
+    //       <td>${v.vValue}</td>
+    //       <td>${v.isFixed ? "fixed" : "perCent"}</td>
+    //     </tr>
+    //     `
+    //   })
+    // }
+    return tr;
+}

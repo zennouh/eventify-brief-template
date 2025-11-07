@@ -116,14 +116,38 @@
                 <!-- Image URL -->
                 <div class="form__group">
                   <label class="form__label" for="event-image">Image URL</label>
+                  <p>Please select your image import type:</p>
+                  <div class="choose-type">
+                    <input
+                      type="radio"
+                      id="upload"
+                      name="imgType"
+                      value="upload"
+                    />
+                    <label for="upload">Upload</label>
+                    <input
+                      type="radio"
+                      id="link"
+                      name="imgType"
+                      value="link"
+                      checked
+                    />
+                    <label for="link">Link</label><br />
+                  </div>
+
                   <input
                     type="url"
                     id="event-image"
-                    class="input"
+                    class="input link"
                     placeholder="https://example.com/image.jpg"
                   />
-                  <!-- <input type="file" id="imageInput" accept="image/*" />
-                            -->
+                  <input
+                    class="is-hidden upload"
+                    type="file"
+                    id="imageInput"
+                    accept="image/*"
+                  />
+
                   <div>
                     <img
                       id="preview"
