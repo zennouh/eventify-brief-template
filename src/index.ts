@@ -1,6 +1,7 @@
 import * as ChartJs from 'chart.js'
 
 const allEventsKey = 'eventsKey'
+const archiveEventsKey = "archive-eventsKey"
 interface IVariant {
   vName: string
   vQuantity: number
@@ -25,18 +26,19 @@ interface IStatics {
 
 let allEvents: IEvent[] = []
 
+let achiveEvents: IEvent[] = []
+
 let subEvents: IEvent[] = []
 
 let variants: IVariant[] = []
+
 let chart: ChartJs
 let currentPage = 1
 const eventPerPage = 3
 let maxPages: number = 0
 
 // @ts-ignore
-ChartJs.Chart.register.apply(
-  null,
-  Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
+ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
 )
 
 function renderGraph() {
@@ -166,6 +168,8 @@ function addEvent(e: Event) {
     //============================
     saveEvent(allEvents)
     variants = []
+    const preview = document.getElementById('preview') as HTMLImageElement;
+    preview.classList.add("is-hidden")
     form?.reset()
   }
 }
@@ -203,17 +207,17 @@ function extractDataFromVar() {
   for (let index = 0; index < childs!.length; index++) {
     const vName = (
       document.getElementsByClassName('input variant-row__name')[
-        index
+      index
       ] as HTMLInputElement
     ).value
     const vQuantity = (
       document.getElementsByClassName('input variant-row__qty')[
-        index
+      index
       ] as HTMLInputElement
     ).value
     const vValue = (
       document.getElementsByClassName('input variant-row__value')[
-        index
+      index
       ] as HTMLInputElement
     ).value
     const mySelect = document.getElementsByClassName(
@@ -238,11 +242,11 @@ function HandleInvalidInputs(
   numberOfSet: number,
   basePrice: number
 ) {
-  const titleTest = title == ''
-  const imageUrlTest = imageUrl == ''
-  const descriptionTest = description == ''
-  const numberOfSetTest = numberOfSet >= 0
-  const basePriceTest = basePrice >= 0
+  const titleTest = title === ''
+  const imageUrlTest = imageUrl === ''
+  const descriptionTest = description === ''
+  const numberOfSetTest = numberOfSet < 0
+  const basePriceTest = basePrice < 0
 
   const errorDiv = document.getElementById('form-errors')
   errorDiv!.innerHTML = ''
@@ -251,8 +255,8 @@ function HandleInvalidInputs(
     titleTest ||
     imageUrlTest ||
     descriptionTest ||
-    !numberOfSetTest ||
-    !basePriceTest
+    numberOfSetTest ||
+    basePriceTest
   ) {
     // alert("S'il vous plain, saisir valid number")
     errorDiv?.classList.remove('is-hidden')
@@ -273,10 +277,10 @@ function HandleInvalidInputs(
     if (descriptionTest) {
       ul.innerHTML += '<li>Invalid desc</li>'
     }
-    if (numberOfSetTest) {
+    if (!numberOfSetTest) {
       ul.innerHTML += '<li>Invalid number of set</li>'
     }
-    if (basePriceTest) {
+    if (!basePriceTest) {
       ul.innerHTML += '<li>Invalid base price</li>'
     }
     errorDiv?.appendChild(paragraph)
@@ -288,11 +292,18 @@ function HandleInvalidInputs(
   }
 }
 
-function saveEvent(events: IEvent[]) {
+function saveEvent(events: IEvent[], key = allEventsKey) {
   let strObjs: string = JSON.stringify(events)
-  localStorage.setItem(allEventsKey, strObjs)
+  localStorage.setItem(key, strObjs)
 }
 
+function getArchiveEventsStorage() {
+  let savedObjs: string = localStorage.getItem(archiveEventsKey) || ''
+  if (savedObjs) {
+    achiveEvents = JSON.parse(savedObjs) || []
+    addToArchive(achiveEvents)
+  }
+}
 function getEventsStorage() {
   let savedObjs: string = localStorage.getItem(allEventsKey) || ''
   if (savedObjs) {
@@ -385,11 +396,6 @@ function pagination(page = 1, searchList: IEvent[] = []) {
   }
 }
 
-function varTableHover() {
-  const varTable = document.getElementById('varTable')
-  varTable!.style!.position = 'absolute'
-  varTable?.classList.toggle('is-hidden')
-}
 
 function handleTable(page: number, searchList: IEvent[] = []) {
   pagination(page, searchList)
@@ -450,14 +456,15 @@ function imgRadio() {
 }
 
 function init() {
-  getEventsStorage()
-  renderGraph()
-  imageFocusOut()
-  initNextPrevBtns()
-  searchByTitle()
-  imgRadio()
-
-  //   uploadImage();
+  getEventsStorage();
+  getArchiveEventsStorage();
+  renderGraph();
+  imageFocusOut();
+  initNextPrevBtns();
+  searchByTitle();
+  imgRadio();
+  sort();
+  uploadImage();
   document
     .querySelectorAll('.sidebar__btn')
     .forEach((btn) => btn.addEventListener('click', selectSection))
@@ -472,26 +479,165 @@ function init() {
     ?.addEventListener('click', addVariant)
 }
 
+function sort() {
+
+  function titleAsc() {
+    for (let i = 0; i < allEvents.length; i++) {
+      for (let j = i + 1; j < allEvents.length; j++) {
+        if (allEvents[i].title > allEvents[j].title) {
+          const container = allEvents[i];// 8
+          allEvents[i] = allEvents[j];
+          allEvents[j] = container;
+        }
+      }
+    }
+    console.log(allEvents);
+
+  }
+  function titleDesc() {
+    for (let i = 0; i < allEvents.length; i++) {
+      for (let j = i + 1; j < allEvents.length; j++) {
+        if (allEvents[i].title < allEvents[j].title) {
+          const container = allEvents[i];
+          allEvents[i] = allEvents[j];
+          allEvents[j] = container;
+        }
+      }
+    }
+    console.log(allEvents);
+
+  }
+  function priceAsc() {
+    for (let i = 0; i < allEvents.length; i++) {
+      for (let j = i + 1; j < allEvents.length; j++) {
+        if (allEvents[i].basePrice > allEvents[j].basePrice) {
+          const container = allEvents[i];// 8
+          allEvents[i] = allEvents[j];
+          allEvents[j] = container;
+        }
+      }
+    }
+    console.log(allEvents);
+  }
+  function priceDesc() {
+    for (let i = 0; i < allEvents.length; i++) {
+      for (let j = i + 1; j < allEvents.length; j++) {
+        if (allEvents[i].basePrice < allEvents[j].basePrice) {
+          const container = allEvents[i];
+          allEvents[i] = allEvents[j];
+          allEvents[j] = container;
+        }
+      }
+    }
+    console.log(allEvents);
+  }
+  function seatsAsc() {
+    for (let i = 0; i < allEvents.length; i++) {
+      for (let j = i + 1; j < allEvents.length; j++) {
+        if (allEvents[i].numberOfSet > allEvents[j].numberOfSet) {
+          const container = allEvents[i];// 8
+          allEvents[i] = allEvents[j];
+          allEvents[j] = container;
+        }
+      }
+    }
+  }
+
+  const sortEvents = document.getElementById("sort-events") as HTMLElement
+  sortEvents.addEventListener("change", (event) => {
+    const value = (event.target! as HTMLInputElement).value;
+    switch (value) {
+      case "title-asc":
+        titleAsc()
+        break;
+      case "title-desc":
+        console.log("click");
+
+        titleDesc()
+        break;
+      case "price-asc":
+        priceAsc()
+        break;
+      case "price-desc":
+        priceDesc()
+        break;
+      case "seats-asc":
+        seatsAsc()
+        break;
+    }
+    handleTable(currentPage);
+  });
+}
+
+
 init()
 
-// function uploadImage() {
-//   const imageInput = document.getElementById('imageInput')
-//   const preview = document.getElementById('preview') as HTMLImageElement
+function uploadImage() {
+  const imageInput = document.getElementById('imageInput')
+  const preview = document.getElementById('preview') as HTMLImageElement
+  imageInput?.addEventListener('change', (event) => {
+    const target = event.target as HTMLInputElement // cast here
+    const file = target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        preview!.src = e.target!.result as string
+        const linkInput = document.querySelector("input[class*='link']")as HTMLInputElement
+        linkInput.value =  e.target!.result as string
+      }
+      reader.readAsDataURL(file)
+    } else {
+      preview.src = ''
+    }
+  },)
+}
 
-//   imageInput?.addEventListener('change', (event) => {
-//     const target = event.target as HTMLInputElement // cast here
-//     const file = target.files?.[0]
-//     if (file) {
-//       const reader = new FileReader()
-//       reader.onload = (e) => {
-//         preview!.src = e.target?.result as string
-//       }
-//       reader.readAsDataURL(file)
-//     } else {
-//       preview.src = ''
-//     }
-//   },)
-// }
+
+function handleTableArchive(page: number, searchList: IEvent[] = []) {
+  pagination(page, searchList)
+  // createPaginationBtns()
+  const tbody = document.querySelector('#archive-table .table__body')
+  tbody!.innerHTML = ''
+  for (let i = 0; i < achiveEvents.length; i++) {
+    const ele = achiveEvents[i]
+    let tr = createTableEventRow(ele, i)
+    tbody?.appendChild(tr)
+  }
+}
+
+
+function removeFromArray(ele: IEvent) {
+  let newArray: IEvent[] = [];
+  let i: number = 0;
+
+  for (let index = 0; index < allEvents.length; index++) {
+    const element = allEvents[index];
+    if (element.description !== ele.description) {
+      newArray[i] = element;
+      console.log(newArray[i]);
+      i++;
+    } else {
+      achiveEvents.push(element);
+      saveEvent(achiveEvents, archiveEventsKey)
+      addToArchive(achiveEvents);
+
+
+
+      // do add to archive
+    }
+  }
+
+  allEvents = newArray;
+  saveEvent(allEvents);
+  updateStaticsSection();
+  handleTable(currentPage);
+
+}
+
+function addToArchive(arr: IEvent[]) {
+  handleTableArchive(1, arr);
+}
+
 
 function createTableEventRow(ele: IEvent, i: number) {
   const tr = document.createElement('tr')
@@ -634,12 +780,7 @@ function createTableEventRow(ele: IEvent, i: number) {
   buttonarchive.textContent = `Delete`
   buttonarchive.onclick = () => {
     console.log('delete')
-    // tr.remove();
-    // let newArr: IEvent[] = [];
-    // for (let index = 0; index < allEvents.length; index++) {
-    //   const element = allEvents[index];
-    // }
-    // handleTable(1)
+    removeFromArray(ele)
   }
   tdControler.appendChild(buttonarchive)
 
@@ -809,6 +950,20 @@ function createUpdateForm(event: IEvent): HTMLElement {
       varBtn.textContent = 'Remove'
       varBtn.addEventListener('click', () => {
         console.log('remove variant')
+        let i: number = 0;
+        let newVars: IVariant[] = [];
+
+        for (let index = 0; index < event.variants!.length; index++) {
+          const va = event.variants![index];
+          if (variant.vName !== va.vName && variant.vQuantity === va.vQuantity) {
+            newVars[i] = va;
+            i++;
+          }
+        }
+        event.variants != newVars;
+        variantssDiv.removeChild(div);
+        console.log("done");
+
       })
       div.appendChild(varBtn)
       variantssDiv.appendChild(div)
@@ -990,18 +1145,14 @@ function readonlydata(event: IEvent): HTMLElement {
       let div = document.createElement('div')
       // div.className = 'variant-row'
       div.innerHTML = `
-    <input value="${
-      variant.vName
-    }" type="text" readonly class="input edit-variant-row__name" />
-    <input value="${
-      variant.vQuantity
-    }" type="number" readonly class="input edit-variant-row__qty" placeholder="Qty" min="1" />
-    <input value="${
-      variant.vValue
-    }" type="number" readonly class="input edit-variant-row__value" placeholder="Value" step="0.01" />
-    <input value="${
-      variant.isFixed ? 'Fixed' : 'perCent'
-    }" type="text" readonly class="input edit-variant-row__name" />
+    <input value="${variant.vName
+        }" type="text" readonly class="input edit-variant-row__name" />
+    <input value="${variant.vQuantity
+        }" type="number" readonly class="input edit-variant-row__qty" placeholder="Qty" min="1" />
+    <input value="${variant.vValue
+        }" type="number" readonly class="input edit-variant-row__value" placeholder="Value" step="0.01" />
+    <input value="${variant.isFixed ? 'Fixed' : 'perCent'
+        }" type="text" readonly class="input edit-variant-row__name" />
     `
 
       variantssDiv.appendChild(div)
@@ -1049,7 +1200,7 @@ function createVariants(event: IEvent) {
   varBtn.type = 'button'
   varBtn.className = 'btn btn--danger btn--small variant-row__remove'
   varBtn.textContent = 'Remove'
-  varBtn.addEventListener('click', () => {})
+  varBtn.addEventListener('click', () => { })
   div.appendChild(varBtn)
   variantssDiv?.appendChild(div)
 }
@@ -1066,17 +1217,17 @@ function extractUpatedDataFromVar() {
   for (let index = 0; index < childs!.length; index++) {
     const vName = (
       document.getElementsByClassName('input edit-variant-row__name')[
-        index
+      index
       ] as HTMLInputElement
     ).value
     const vQuantity = (
       document.getElementsByClassName('input edit-variant-row__qty')[
-        index
+      index
       ] as HTMLInputElement
     ).value
     const vValue = (
       document.getElementsByClassName('input edit-variant-row__value')[
-        index
+      index
       ] as HTMLInputElement
     ).value
     const mySelect = document.getElementsByClassName(
