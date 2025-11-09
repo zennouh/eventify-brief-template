@@ -34,7 +34,9 @@ const eventPerPage = 3
 let maxPages: number = 0
 
 // @ts-ignore
-ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
+ChartJs.Chart.register.apply(
+  null,
+  Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
 )
 
 function renderGraph() {
@@ -201,17 +203,17 @@ function extractDataFromVar() {
   for (let index = 0; index < childs!.length; index++) {
     const vName = (
       document.getElementsByClassName('input variant-row__name')[
-      index
+        index
       ] as HTMLInputElement
     ).value
     const vQuantity = (
       document.getElementsByClassName('input variant-row__qty')[
-      index
+        index
       ] as HTMLInputElement
     ).value
     const vValue = (
       document.getElementsByClassName('input variant-row__value')[
-      index
+        index
       ] as HTMLInputElement
     ).value
     const mySelect = document.getElementsByClassName(
@@ -286,8 +288,6 @@ function HandleInvalidInputs(
   }
 }
 
-
-
 function saveEvent(events: IEvent[]) {
   let strObjs: string = JSON.stringify(events)
   localStorage.setItem(allEventsKey, strObjs)
@@ -329,7 +329,6 @@ function createPaginationBtns() {
   const navigationBtn = document.getElementById('navigationBtn')
   navigationBtn!.innerHTML = ''
 
-
   for (let index = 0; index < maxPages; index++) {
     const button = document.createElement('button')
     if (index == currentPage - 1) {
@@ -346,7 +345,6 @@ function createPaginationBtns() {
 }
 
 function pagination(page = 1, searchList: IEvent[] = []) {
-
   currentPage = page
   let events: IEvent[] = []
   if (searchList.length === 0) {
@@ -354,7 +352,10 @@ function pagination(page = 1, searchList: IEvent[] = []) {
   } else {
     events = searchList
   }
-  maxPages = events.length % eventPerPage == 0 ? events.length / eventPerPage : Math.ceil(events.length / eventPerPage)
+  maxPages =
+    events.length % eventPerPage == 0
+      ? events.length / eventPerPage
+      : Math.ceil(events.length / eventPerPage)
 
   let skip = (page - 1) * eventPerPage
 
@@ -385,9 +386,9 @@ function pagination(page = 1, searchList: IEvent[] = []) {
 }
 
 function varTableHover() {
-  const varTable = document.getElementById("varTable")
-  varTable!.style!.position = "absolute"
-  varTable?.classList.toggle("is-hidden")
+  const varTable = document.getElementById('varTable')
+  varTable!.style!.position = 'absolute'
+  varTable?.classList.toggle('is-hidden')
 }
 
 function handleTable(page: number, searchList: IEvent[] = []) {
@@ -397,7 +398,7 @@ function handleTable(page: number, searchList: IEvent[] = []) {
   tbody!.innerHTML = ''
   for (let i = 0; i < subEvents.length; i++) {
     const ele = subEvents[i]
-    let tr = createTableEventRow(ele, i);
+    let tr = createTableEventRow(ele, i)
     tbody?.appendChild(tr)
   }
 }
@@ -432,22 +433,18 @@ function imageFocusOut() {
 
 function imgRadio() {
   const inputRadios = document.querySelectorAll("input[name='imgType']")
-  const linkInput = document.querySelector("input[class*='link']");
-  const uploadInput = document.querySelector("input[class*='upload']");
+  const linkInput = document.querySelector("input[class*='link']")
+  const uploadInput = document.querySelector("input[class*='upload']")
   inputRadios.forEach((r) => {
-    r.addEventListener("change", () => {
+    r.addEventListener('change', () => {
       const value = (r as HTMLInputElement).value
-      if (value === "upload") {
-
-        uploadInput?.classList.remove("is-hidden")
-        linkInput?.classList.add("is-hidden")
-
+      if (value === 'upload') {
+        uploadInput?.classList.remove('is-hidden')
+        linkInput?.classList.add('is-hidden')
       } else {
-
-        linkInput?.classList.remove("is-hidden")
-        uploadInput?.classList.add("is-hidden")
+        linkInput?.classList.remove('is-hidden')
+        uploadInput?.classList.add('is-hidden')
       }
-
     })
   })
 }
@@ -496,80 +493,72 @@ init()
 //   },)
 // }
 
-
-
-
-
-
-
 function createTableEventRow(ele: IEvent, i: number) {
   const tr = document.createElement('tr')
 
   tr.className = 'table__row'
   tr.dataset.eventId = (i + 1).toString()
 
-  const tdId = document.createElement('td');
-  tdId.textContent = `${i + 1}`;
-  tr.appendChild(tdId);
+  const tdId = document.createElement('td')
+  tdId.textContent = `${i + 1}`
+  tr.appendChild(tdId)
 
-
-  const tdImg = document.createElement('td');
-  tdImg.style.width = "100px"
-  tdImg.style.height = "100px"
+  const tdImg = document.createElement('td')
+  tdImg.style.width = '100px'
+  tdImg.style.height = '100px'
   tdImg.innerHTML = `<img src="${ele.imageUrl}"
-  alt="" style="height="100%"; width="100%";  object-fit: fill;">`;
-  tr.appendChild(tdImg);
+  alt="" style="height="100%"; width="100%";  object-fit: fill;">`
+  tr.appendChild(tdImg)
 
-  const tdTitle = document.createElement('td');
-  tdTitle.textContent = `${ele.title}`;
-  tr.appendChild(tdTitle);
+  const tdTitle = document.createElement('td')
+  tdTitle.textContent = `${ele.title}`
+  tr.appendChild(tdTitle)
 
+  const tdSeats = document.createElement('td')
+  tdSeats.textContent = `${ele.numberOfSet}`
+  tr.appendChild(tdSeats)
 
-  const tdSeats = document.createElement('td');
-  tdSeats.textContent = `${ele.numberOfSet}`;
-  tr.appendChild(tdSeats);
+  const tdPrice = document.createElement('td')
+  tdPrice.textContent = `${ele.basePrice}`
+  tr.appendChild(tdPrice)
 
-  const tdPrice = document.createElement('td');
-  tdPrice.textContent = `${ele.basePrice}`;
-  tr.appendChild(tdPrice);
+  const tdVariants = document.createElement('td')
+  tdVariants.style.position = 'relative'
+  tdVariants.id = `vari-${i + 1}`
+  const button = document.createElement('button')
+  button.id = `vari-id-${i + 1}`
+  button.className = `btn btn--small`
+  button.dataset.action = `details`
+  button.textContent = `Variants`
 
+  button.onclick = () => {
+    console.log('in click')
+    const bodyModel = document.getElementById('vari-modal-body')
+    const modal = document.getElementById('vari-event-modal')
+    modal?.classList.remove('is-hidden')
+    const close = document.getElementById('vari-close-modal')
+    close?.addEventListener('click', () => {
+      bodyModel!.innerHTML = ''
+      modal?.classList.add('is-hidden')
+    })
 
+    let content: string = ''
 
-  const tdVariants = document.createElement('td');
-  tdVariants.style.position = "relative";
-  tdVariants.id = `vari-${i + 1}`;
-  const button = document.createElement('button');
-  button.id = `vari-id-${i + 1}`;
-  button.className = `btn btn--small`;
-  button.dataset.action = `details`;
-  button.textContent = `Variants`;
-  button.onmouseover = () => {
-    button.classList.toggle("is-hidden")
-    varTableHover()
-  }
-  button.onmouseleave = () => {
-    button.classList.toggle("is-hidden")
-    varTableHover()
-  }
-
-  tdVariants.appendChild(button)
-  let content: string = '';
-
-  ele.variants?.forEach((v, i) => {
-    content += `<tr class="table__row" data-event="${i + 1}">
+    ele.variants?.forEach((v, i) => {
+      content += `<tr class="table__row" data-event="${i + 1}">
         <td>${v.vName}</td>
         <td>${v.vQuantity}</td>
         <td>${v.vValue}</td>
-        <td>${v.isFixed ? "fixed" : "percent"}</td>
+        <td>${v.isFixed ? 'fixed' : 'percent'}</td>
       </tr>`
-  })
+    })
 
-  const table = document.createElement("table");
-  table.className = "table is-hidden"
-  table.style= "z-index: 100;"
-  table.id = "varTable"
-  table.style.backgroundColor = "red"
-  table.innerHTML = `
+    const table = document.createElement('table')
+    table.className = 'table'
+
+    table.id = 'varTable'
+
+    table.innerHTML = `
      <thead class="table__head">
       <tr class="table__row">
         <th>Title</th>
@@ -582,51 +571,69 @@ function createTableEventRow(ele: IEvent, i: number) {
       ${content}
     </tbody>
   `
-  tdVariants.appendChild(table)
+
+    bodyModel?.appendChild(table)
+  }
+  // button.onmouseleave = () => {
+  //   button.classList.toggle('is-hidden')
+  //   varTableHover()
+  // }
+
+  tdVariants.appendChild(button)
+
+  // tdVariants.appendChild(table)
   tr.appendChild(tdVariants)
 
   // =========================================
 
+  const tdControler = document.createElement('td')
 
-  const tdControler = document.createElement("td")
-
-  const buttondetails = document.createElement('button');
-  buttondetails.className = `btn btn--small`;
-  buttondetails.dataset.action = `details`;
-  buttondetails.textContent = `Details`;
+  const buttondetails = document.createElement('button')
+  buttondetails.className = `btn btn--small`
+  buttondetails.dataset.action = `details`
+  buttondetails.textContent = `Details`
   buttondetails.onclick = () => {
-    console.log("this is details");
-
+    console.log('this is details')
+    const bodyModel = document.getElementById('details-modal-body')
+    const modal = document.getElementById('details-event-modal')
+    modal?.classList.remove('is-hidden')
+    const close = document.getElementById('details-close-modal')
+    close?.addEventListener('click', () => {
+      bodyModel!.innerHTML = ''
+      modal?.classList.add('is-hidden')
+    })
+    const form = readonlydata(ele)
+    bodyModel?.appendChild(form)
   }
+
   tdControler.appendChild(buttondetails)
 
-  const buttonedit = document.createElement('button');
-  buttonedit.className = `btn btn--small`;
-  buttonedit.dataset.action = `edit`;
-  buttonedit.textContent = `Edit`;
+  const buttonedit = document.createElement('button')
+  buttonedit.className = `btn btn--small`
+  buttonedit.dataset.action = `edit`
+  buttonedit.textContent = `Edit`
   buttonedit.onclick = () => {
-    const eventModel = document.getElementById("event-modal")
-    eventModel?.classList.remove("is-hidden")
+    const eventModel = document.getElementById('event-modal')
+    eventModel?.classList.remove('is-hidden')
     const form = createUpdateForm(ele) as HTMLFormElement
-    const closeBtn = document.querySelector("button.modal__close")
-    closeBtn?.addEventListener("click", () => {
-      eventModel?.classList.add("is-hidden")
-      form.innerHTML = ""
+    const closeBtn = document.querySelector('button.modal__close')
+    closeBtn?.addEventListener('click', () => {
+      eventModel?.classList.add('is-hidden')
+      form.innerHTML = ''
     })
 
-    const mainModelContent = document.getElementById("modal-body")
+    const mainModelContent = document.getElementById('modal-body')
 
     mainModelContent?.appendChild(form)
-
   }
   tdControler.appendChild(buttonedit)
 
-  const buttonarchive = document.createElement('button');
-  buttonarchive.className = `btn btn--danger btn--small`;
-  buttonarchive.dataset.action = `archive`;
-  buttonarchive.textContent = `Delete`;
+  const buttonarchive = document.createElement('button')
+  buttonarchive.className = `btn btn--danger btn--small`
+  buttonarchive.dataset.action = `archive`
+  buttonarchive.textContent = `Delete`
   buttonarchive.onclick = () => {
-    console.log("delete");
+    console.log('delete')
     // tr.remove();
     // let newArr: IEvent[] = [];
     // for (let index = 0; index < allEvents.length; index++) {
@@ -638,12 +645,11 @@ function createTableEventRow(ele: IEvent, i: number) {
 
   tr.appendChild(tdControler)
 
-  return tr;
-
+  return tr
 }
 
 function createUpdateForm(event: IEvent): HTMLElement {
-  const form = document.createElement("form")
+  const form = document.createElement('form')
   form.innerHTML = `
   
                 <!-- Title -->
@@ -757,37 +763,36 @@ function createUpdateForm(event: IEvent): HTMLElement {
               
                 
   `
-  let fieldset: HTMLFieldSetElement | null = null;
+  let fieldset: HTMLFieldSetElement | null = null
 
   // display variants fieldset
   if (event.variants) {
-    fieldset = document.createElement("fieldset")
-    fieldset.className = "variants"
-    const legend = document.createElement("legend");
-    legend.className = "variants__title"
-    legend.innerHTML = " Pricing Variants (Optional)"
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "btn btn--small"
-    button.id = "edit-btn-add-variant"
-    button.textContent = "+ Add Variant"
-    button.addEventListener("click", () => {
-      console.log("add variants");
+    fieldset = document.createElement('fieldset')
+    fieldset.className = 'variants'
+    const legend = document.createElement('legend')
+    legend.className = 'variants__title'
+    legend.innerHTML = ' Pricing Variants (Optional)'
+    const button = document.createElement('button')
+    button.type = 'button'
+    button.className = 'btn btn--small'
+    button.id = 'edit-btn-add-variant'
+    button.textContent = '+ Add Variant'
+    button.addEventListener('click', () => {
+      console.log('add variants')
       createVariants(event)
     })
     legend.appendChild(button)
     fieldset.appendChild(legend)
 
+    const variantssDiv = document.createElement('div')
+    variantssDiv.className = 'variants__list'
+    variantssDiv.id = 'edit-variants-list'
 
-    const variantssDiv = document.createElement("div");
-    variantssDiv.className = "variants__list"
-    variantssDiv.id = "edit-variants-list";
-
-    // display variants 
+    // display variants
     for (let index = 0; index < event.variants!.length; index++) {
-      const variant = event.variants![index];
+      const variant = event.variants![index]
       let div = document.createElement('div')
-      div.className = 'variant-row'
+      // div.className = 'variant-row'
       div.innerHTML = `
     <input value="${variant.vName}" type="text" class="input edit-variant-row__name" />
     <input value="${variant.vQuantity}" type="number" class="input edit-variant-row__qty" placeholder="Qty" min="1" />
@@ -798,31 +803,30 @@ function createUpdateForm(event: IEvent): HTMLElement {
     </select>
     
     `
-      const varBtn = document.createElement("button")
-      varBtn.type = "button";
-      varBtn.className = "btn btn--danger btn--small variant-row__remove"
-      varBtn.textContent = "Remove"
-      varBtn.addEventListener("click", () => {
-        console.log("remove variant");
+      const varBtn = document.createElement('button')
+      varBtn.type = 'button'
+      varBtn.className = 'btn btn--danger btn--small variant-row__remove'
+      varBtn.textContent = 'Remove'
+      varBtn.addEventListener('click', () => {
+        console.log('remove variant')
       })
       div.appendChild(varBtn)
       variantssDiv.appendChild(div)
     }
-    fieldset.appendChild(variantssDiv);
+    fieldset.appendChild(variantssDiv)
   }
 
   if (fieldset) {
     form.appendChild(fieldset)
   }
 
-
-  const formAction = document.createElement("div")
-  formAction.className = "form__actions"
-  const button = document.createElement("button");
-  button.className = "btn btn--primary"
-  button.type = "submit"
-  button.textContent = "Edit"
-  form.addEventListener("submit", (e) => {
+  const formAction = document.createElement('div')
+  formAction.className = 'form__actions'
+  const button = document.createElement('button')
+  button.className = 'btn btn--primary'
+  button.type = 'submit'
+  button.textContent = 'Edit'
+  form.addEventListener('submit', (e) => {
     e.preventDefault()
     const title = (
       document.getElementById('edit-event-title')! as HTMLInputElement
@@ -847,7 +851,6 @@ function createUpdateForm(event: IEvent): HTMLElement {
       basePrice
     )
     if (!isInvalid) {
-      // extractDataFromVar()
       const _allvars = extractUpatedDataFromVar()
       const ele: IEvent = {
         title,
@@ -857,52 +860,181 @@ function createUpdateForm(event: IEvent): HTMLElement {
         basePrice,
         variants: _allvars,
       }
-      const eventModel = document.getElementById("event-modal")
-      if (confirm("are sure")) {
+      const eventModel = document.getElementById('event-modal')
+      if (confirm('are sure')) {
+        const eTndex = getEventIndex(event)
+        console.log(eTndex)
 
-        const eTndex = getEventIndex(event);
-        console.log(eTndex);
-
-        allEvents[eTndex] = ele;
+        allEvents[eTndex] = ele
         saveEvent(allEvents)
         handleTable(currentPage)
-        const closeBtn = document.querySelector("button.modal__close")
-        closeBtn?.addEventListener("click", () => {
-
-          eventModel?.classList.add("is-hidden")
-
+        const closeBtn = document.querySelector('button.modal__close')
+        closeBtn?.addEventListener('click', () => {
+          eventModel?.classList.add('is-hidden')
         })
       } else {
-
       }
-      eventModel?.classList.add("is-hidden")
-      form.innerHTML = ""
+      eventModel?.classList.add('is-hidden')
+      form.innerHTML = ''
     }
   })
   formAction.appendChild(button)
   form.appendChild(formAction)
 
+  return form
+}
 
-  return form;
+function readonlydata(event: IEvent): HTMLElement {
+  const form = document.createElement('form')
+  form.innerHTML = `
+  
+                <!-- Title -->
+                <div class="form__group">
+                  <label class="form__label" for="event-title"
+                    >Event Title</label
+                  >
+                  <input
+                    type="text"
+                    id="edit-event-title"
+                    class="input" readonly
+                    placeholder="Enter event title"
+                    value="${event.title}"
+                    required
+                  />
+                </div>
+
+                <!-- Image URL -->
+                <div class="form__group">
+                  <label class="form__label" for="event-image">Image URL</label>
+                   
+
+                  <div>
+                    <img
+                      id="preview"
+                      src="${event.imageUrl}"
+                      alt="Image Preview"
+                     
+                    />
+                  </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form__group">
+                  <label class="form__label" for="event-description"
+                    >Description</label
+                  >
+                  <textarea
+                    id="edit-event-description"
+                    class="input" readonly
+                    placeholder="Describe the event..."
+                    rows="4"
+                  >${event.description}</textarea>
+                </div>
+
+                <!-- Seats -->
+                <div class="form__group">
+                  <label class="form__label" for="event-seats"
+                    >Number of Seats</label
+                  >
+                  <input
+                    type="number"
+                    id="edit-event-seats"
+                    class="input" readonly
+                    placeholder="100"
+                     value="${event.numberOfSet}"
+                    min="1"
+                    required
+                  />
+                </div>
+
+                <!-- Base Price -->
+                <div class="form__group">
+                  <label class="form__label" for="event-price"
+                    >Base Price ($)</label
+                  >
+                  <input
+                    type="number"
+                    id="edit-event-price" readonly
+                    class="input"
+                     value="${event.basePrice}"
+                    placeholder="50.00"
+                    min="0"
+                    step="0.01"
+                    required
+                  />
+                </div>
+
+
+              
+                
+  `
+  let fieldset: HTMLFieldSetElement | null = null
+
+  // display variants fieldset
+  if (event.variants) {
+    fieldset = document.createElement('fieldset')
+    fieldset.className = 'variants'
+    const legend = document.createElement('legend')
+    legend.className = 'variants__title'
+    legend.innerHTML = ' Pricing Variants'
+
+    fieldset.appendChild(legend)
+
+    const variantssDiv = document.createElement('div')
+    variantssDiv.className = 'variants__list'
+    variantssDiv.id = 'edit-variants-list'
+
+    // display variants
+    for (let index = 0; index < event.variants!.length; index++) {
+      const variant = event.variants![index]
+      let div = document.createElement('div')
+      // div.className = 'variant-row'
+      div.innerHTML = `
+    <input value="${
+      variant.vName
+    }" type="text" readonly class="input edit-variant-row__name" />
+    <input value="${
+      variant.vQuantity
+    }" type="number" readonly class="input edit-variant-row__qty" placeholder="Qty" min="1" />
+    <input value="${
+      variant.vValue
+    }" type="number" readonly class="input edit-variant-row__value" placeholder="Value" step="0.01" />
+    <input value="${
+      variant.isFixed ? 'Fixed' : 'perCent'
+    }" type="text" readonly class="input edit-variant-row__name" />
+    `
+
+      variantssDiv.appendChild(div)
+    }
+    fieldset.appendChild(variantssDiv)
+  }
+
+  if (fieldset) {
+    form.appendChild(fieldset)
+  }
+
+  return form
 }
 
 function getEventIndex(event: IEvent): number {
   for (let index = 0; index < allEvents.length; index++) {
-    const element = allEvents[index];
-    if (event.title == element.title && event.description == element.description) {
-      return index;
+    const element = allEvents[index]
+    if (
+      event.title == element.title &&
+      event.description == element.description
+    ) {
+      return index
     }
   }
-  return -1;
+  return -1
 }
 
-
 function createVariants(event: IEvent) {
-  let variant = { vName: "", vQuantity: 0, vValue: 0, isFixed: false };
+  let variant = { vName: '', vQuantity: 0, vValue: 0, isFixed: false }
   // event.variants?.push(variant);
-  const variantssDiv = document.getElementById("edit-variants-list")
+  const variantssDiv = document.getElementById('edit-variants-list')
   let div = document.createElement('div')
-  div.className = 'variant-row'
+  // div.className = 'variant-row'
   div.innerHTML = `
     <input value="${variant.vName}" type="text" class="input edit-variant-row__name" placeholder="Variant name (e.g., 'Early Bird')" />
     <input value="${variant.vQuantity}" type="number" class="input edit-variant-row__qty" placeholder="Qty" min="1" />
@@ -913,14 +1045,11 @@ function createVariants(event: IEvent) {
         </select>
     
     `
-  const varBtn = document.createElement("button")
-  varBtn.type = "button";
-  varBtn.className = "btn btn--danger btn--small variant-row__remove"
-  varBtn.textContent = "Remove"
-  varBtn.addEventListener("click", () => {
-
-
-  })
+  const varBtn = document.createElement('button')
+  varBtn.type = 'button'
+  varBtn.className = 'btn btn--danger btn--small variant-row__remove'
+  varBtn.textContent = 'Remove'
+  varBtn.addEventListener('click', () => {})
   div.appendChild(varBtn)
   variantssDiv?.appendChild(div)
 }
@@ -937,17 +1066,17 @@ function extractUpatedDataFromVar() {
   for (let index = 0; index < childs!.length; index++) {
     const vName = (
       document.getElementsByClassName('input edit-variant-row__name')[
-      index
+        index
       ] as HTMLInputElement
     ).value
     const vQuantity = (
       document.getElementsByClassName('input edit-variant-row__qty')[
-      index
+        index
       ] as HTMLInputElement
     ).value
     const vValue = (
       document.getElementsByClassName('input edit-variant-row__value')[
-      index
+        index
       ] as HTMLInputElement
     ).value
     const mySelect = document.getElementsByClassName(
@@ -969,7 +1098,5 @@ function extractUpatedDataFromVar() {
       isFixed,
     })
   }
-  return allvars;
-
-
+  return allvars
 }

@@ -109,7 +109,6 @@
                     id="event-title"
                     class="input"
                     placeholder="Enter event title"
-                
                     required
                   />
                 </div>
@@ -270,7 +269,6 @@
                   <tr>
                     <th>#</th>
                     <th>cover</th>
-
                     <th>Title</th>
                     <th>Seats</th>
                     <th>Price</th>
@@ -349,12 +347,48 @@
       <div class="modal__overlay"></div>
       <div class="modal__content">
         <header class="modal__header">
-          <h3 class="modal__title" id="modal-title">Event Details</h3>
+          <h3 class="modal__title" id="modal-title">Edit Details</h3>
           <button class="modal__close" data-action="close-modal">
             &times;
           </button>
         </header>
         <div class="modal__body" id="modal-body">
+          <!-- Content populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <div class="modal is-hidden" id="vari-event-modal">
+      <div class="modal__overlay"></div>
+      <div class="modal__content">
+        <header class="modal__header">
+          <h3 class="modal__title" id="modal-title">Variants Details</h3>
+          <button
+            class="modal__close"
+            id="vari-close-modal"
+            data-action="vari-close-modal"
+          >
+            &times;
+          </button>
+        </header>
+        <div class="modal__body" id="vari-modal-body"></div>
+      </div>
+    </div>
+
+    <div class="modal is-hidden" id="details-event-modal">
+      <div class="modal__overlay"></div>
+      <div class="modal__content">
+        <header class="modal__header">
+          <h3 class="modal__title" id="modal-title">Event Details</h3>
+          <button
+            class="modal__close"
+            id="details-close-modal"
+            data-action="close-modal"
+          >
+            &times;
+          </button>
+        </header>
+        <div class="modal__body" id="details-modal-body">
           <!-- Content populated by JS -->
         </div>
       </div>

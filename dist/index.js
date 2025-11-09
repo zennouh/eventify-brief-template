@@ -56,7 +56,7 @@ function selectSection(event) {
         event.currentTarget.classList.add('is-active');
         const data = event.currentTarget.dataset.screen;
         const section = document.querySelector(`section[data-screen="${data}"]`);
-        section === null || section === void 0 ? void 0 : section.classList.add('is-visible');
+        section?.classList.add('is-visible');
     }
 }
 function clearInputs() {
@@ -68,7 +68,7 @@ function clearInputs() {
         element.remove();
     }
     variants = [];
-    form === null || form === void 0 ? void 0 : form.reset();
+    form?.reset();
 }
 function addEvent(e) {
     const form = document.getElementById('event-form');
@@ -97,11 +97,10 @@ function addEvent(e) {
         //============================
         saveEvent(allEvents);
         variants = [];
-        form === null || form === void 0 ? void 0 : form.reset();
+        form?.reset();
     }
 }
 function addVariant() {
-    var _a;
     let div = document.createElement('div');
     div.className = 'variant-row';
     div.innerHTML = `
@@ -114,7 +113,7 @@ function addVariant() {
         </select>
     <button type="button" class="btn btn--danger btn--small variant-row__remove">Remove</button>
     `;
-    (_a = document.getElementById('variants-list')) === null || _a === void 0 ? void 0 : _a.appendChild(div);
+    document.getElementById('variants-list')?.appendChild(div);
     console.log(div.children);
     div.children[4].addEventListener('click', () => {
         div.remove();
@@ -122,18 +121,18 @@ function addVariant() {
 }
 function extractDataFromVar() {
     const allVars = document.getElementById('variants-list');
-    const childs = allVars === null || allVars === void 0 ? void 0 : allVars.children;
-    if ((childs === null || childs === void 0 ? void 0 : childs.length) == 0) {
+    const childs = allVars?.children;
+    if (childs?.length == 0) {
         return;
     }
-    console.log('extractDataFromVar: ', childs === null || childs === void 0 ? void 0 : childs.length);
+    console.log('extractDataFromVar: ', childs?.length);
     for (let index = 0; index < childs.length; index++) {
         const vName = document.getElementsByClassName('input variant-row__name')[index].value;
         const vQuantity = document.getElementsByClassName('input variant-row__qty')[index].value;
         const vValue = document.getElementsByClassName('input variant-row__value')[index].value;
         const mySelect = document.getElementsByClassName('select variant-row__type')[index];
-        const isFixed = (mySelect === null || mySelect === void 0 ? void 0 : mySelect.value) == 'fixed';
-        variants === null || variants === void 0 ? void 0 : variants.push({
+        const isFixed = mySelect?.value == 'fixed';
+        variants?.push({
             vName,
             vQuantity: Number(vQuantity),
             vValue: Number(vValue),
@@ -156,7 +155,7 @@ function HandleInvalidInputs(title, imageUrl, description, numberOfSet, basePric
         !numberOfSetTest ||
         !basePriceTest) {
         // alert("S'il vous plain, saisir valid number")
-        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.classList.remove('is-hidden');
+        errorDiv?.classList.remove('is-hidden');
         const paragraph = document.createElement('p');
         paragraph.style.fontSize = '15px';
         paragraph.style.fontWeight = 'bold';
@@ -179,12 +178,12 @@ function HandleInvalidInputs(title, imageUrl, description, numberOfSet, basePric
         if (basePriceTest) {
             ul.innerHTML += '<li>Invalid base price</li>';
         }
-        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.appendChild(paragraph);
-        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.appendChild(ul);
+        errorDiv?.appendChild(paragraph);
+        errorDiv?.appendChild(ul);
         return true;
     }
     else {
-        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.classList.add('is-hidden');
+        errorDiv?.classList.add('is-hidden');
         return false;
     }
 }
@@ -231,7 +230,7 @@ function createPaginationBtns() {
         button.addEventListener('click', () => {
             handleTable(index + 1);
         });
-        navigationBtn === null || navigationBtn === void 0 ? void 0 : navigationBtn.appendChild(button);
+        navigationBtn?.appendChild(button);
     }
 }
 function pagination(page = 1, searchList = []) {
@@ -243,7 +242,10 @@ function pagination(page = 1, searchList = []) {
     else {
         events = searchList;
     }
-    maxPages = events.length % eventPerPage == 0 ? events.length / eventPerPage : Math.ceil(events.length / eventPerPage);
+    maxPages =
+        events.length % eventPerPage == 0
+            ? events.length / eventPerPage
+            : Math.ceil(events.length / eventPerPage);
     let skip = (page - 1) * eventPerPage;
     if (eventPerPage > events.length) {
         subEvents = events;
@@ -268,9 +270,9 @@ function pagination(page = 1, searchList = []) {
     }
 }
 function varTableHover() {
-    const varTable = document.getElementById("varTable");
-    varTable.style.position = "absolute";
-    varTable === null || varTable === void 0 ? void 0 : varTable.classList.toggle("is-hidden");
+    const varTable = document.getElementById('varTable');
+    varTable.style.position = 'absolute';
+    varTable?.classList.toggle('is-hidden');
 }
 function handleTable(page, searchList = []) {
     pagination(page, searchList);
@@ -280,7 +282,7 @@ function handleTable(page, searchList = []) {
     for (let i = 0; i < subEvents.length; i++) {
         const ele = subEvents[i];
         let tr = createTableEventRow(ele, i);
-        tbody === null || tbody === void 0 ? void 0 : tbody.appendChild(tr);
+        tbody?.appendChild(tr);
     }
 }
 function searchByTitle() {
@@ -302,7 +304,7 @@ function searchByTitle() {
 function imageFocusOut() {
     const preview = document.getElementById('preview');
     const imageEvent = document.getElementById('event-image');
-    imageEvent === null || imageEvent === void 0 ? void 0 : imageEvent.addEventListener('input', (event) => {
+    imageEvent?.addEventListener('input', (event) => {
         const value = event.currentTarget.value;
         preview.src = value;
         preview.classList.remove('is-hidden');
@@ -313,21 +315,20 @@ function imgRadio() {
     const linkInput = document.querySelector("input[class*='link']");
     const uploadInput = document.querySelector("input[class*='upload']");
     inputRadios.forEach((r) => {
-        r.addEventListener("change", () => {
+        r.addEventListener('change', () => {
             const value = r.value;
-            if (value === "upload") {
-                uploadInput === null || uploadInput === void 0 ? void 0 : uploadInput.classList.remove("is-hidden");
-                linkInput === null || linkInput === void 0 ? void 0 : linkInput.classList.add("is-hidden");
+            if (value === 'upload') {
+                uploadInput?.classList.remove('is-hidden');
+                linkInput?.classList.add('is-hidden');
             }
             else {
-                linkInput === null || linkInput === void 0 ? void 0 : linkInput.classList.remove("is-hidden");
-                uploadInput === null || uploadInput === void 0 ? void 0 : uploadInput.classList.add("is-hidden");
+                linkInput?.classList.remove('is-hidden');
+                uploadInput?.classList.add('is-hidden');
             }
         });
     });
 }
 function init() {
-    var _a, _b, _c;
     getEventsStorage();
     renderGraph();
     imageFocusOut();
@@ -338,12 +339,15 @@ function init() {
     document
         .querySelectorAll('.sidebar__btn')
         .forEach((btn) => btn.addEventListener('click', selectSection));
-    (_a = document
-        .querySelector('.form__actions button.btn--primary')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', addEvent);
-    (_b = document
-        .querySelector('button.btn--ghost')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', clearInputs);
-    (_c = document
-        .getElementById('btn-add-variant')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', addVariant);
+    document
+        .querySelector('.form__actions button.btn--primary')
+        ?.addEventListener('click', addEvent);
+    document
+        .querySelector('button.btn--ghost')
+        ?.addEventListener('click', clearInputs);
+    document
+        .getElementById('btn-add-variant')
+        ?.addEventListener('click', addVariant);
 }
 init();
 // function uploadImage() {
@@ -364,7 +368,6 @@ init();
 //   },)
 // }
 function createTableEventRow(ele, i) {
-    var _a;
     const tr = document.createElement('tr');
     tr.className = 'table__row';
     tr.dataset.eventId = (i + 1).toString();
@@ -372,8 +375,8 @@ function createTableEventRow(ele, i) {
     tdId.textContent = `${i + 1}`;
     tr.appendChild(tdId);
     const tdImg = document.createElement('td');
-    tdImg.style.width = "100px";
-    tdImg.style.height = "100px";
+    tdImg.style.width = '100px';
+    tdImg.style.height = '100px';
     tdImg.innerHTML = `<img src="${ele.imageUrl}"
   alt="" style="height="100%"; width="100%";  object-fit: fill;">`;
     tr.appendChild(tdImg);
@@ -387,37 +390,36 @@ function createTableEventRow(ele, i) {
     tdPrice.textContent = `${ele.basePrice}`;
     tr.appendChild(tdPrice);
     const tdVariants = document.createElement('td');
-    tdVariants.style.position = "relative";
+    tdVariants.style.position = 'relative';
     tdVariants.id = `vari-${i + 1}`;
     const button = document.createElement('button');
     button.id = `vari-id-${i + 1}`;
     button.className = `btn btn--small`;
     button.dataset.action = `details`;
     button.textContent = `Variants`;
-    button.onmouseover = () => {
-        button.classList.toggle("is-hidden");
-        varTableHover();
-    };
-    button.onmouseleave = () => {
-        button.classList.toggle("is-hidden");
-        varTableHover();
-    };
-    tdVariants.appendChild(button);
-    let content = '';
-    (_a = ele.variants) === null || _a === void 0 ? void 0 : _a.forEach((v, i) => {
-        content += `<tr class="table__row" data-event="${i + 1}">
+    button.onclick = () => {
+        console.log('in click');
+        const bodyModel = document.getElementById('vari-modal-body');
+        const modal = document.getElementById('vari-event-modal');
+        modal?.classList.remove('is-hidden');
+        const close = document.getElementById('vari-close-modal');
+        close?.addEventListener('click', () => {
+            bodyModel.innerHTML = '';
+            modal?.classList.add('is-hidden');
+        });
+        let content = '';
+        ele.variants?.forEach((v, i) => {
+            content += `<tr class="table__row" data-event="${i + 1}">
         <td>${v.vName}</td>
         <td>${v.vQuantity}</td>
         <td>${v.vValue}</td>
-        <td>${v.isFixed ? "fixed" : "percent"}</td>
+        <td>${v.isFixed ? 'fixed' : 'percent'}</td>
       </tr>`;
-    });
-    const table = document.createElement("table");
-    table.className = "table is-hidden";
-    table.style = "z-index: 100;";
-    table.id = "varTable";
-    table.style.backgroundColor = "red";
-    table.innerHTML = `
+        });
+        const table = document.createElement('table');
+        table.className = 'table';
+        table.id = 'varTable';
+        table.innerHTML = `
      <thead class="table__head">
       <tr class="table__row">
         <th>Title</th>
@@ -430,16 +432,33 @@ function createTableEventRow(ele, i) {
       ${content}
     </tbody>
   `;
-    tdVariants.appendChild(table);
+        bodyModel?.appendChild(table);
+    };
+    // button.onmouseleave = () => {
+    //   button.classList.toggle('is-hidden')
+    //   varTableHover()
+    // }
+    tdVariants.appendChild(button);
+    // tdVariants.appendChild(table)
     tr.appendChild(tdVariants);
     // =========================================
-    const tdControler = document.createElement("td");
+    const tdControler = document.createElement('td');
     const buttondetails = document.createElement('button');
     buttondetails.className = `btn btn--small`;
     buttondetails.dataset.action = `details`;
     buttondetails.textContent = `Details`;
     buttondetails.onclick = () => {
-        console.log("this is details");
+        console.log('this is details');
+        const bodyModel = document.getElementById('details-modal-body');
+        const modal = document.getElementById('details-event-modal');
+        modal?.classList.remove('is-hidden');
+        const close = document.getElementById('details-close-modal');
+        close?.addEventListener('click', () => {
+            bodyModel.innerHTML = '';
+            modal?.classList.add('is-hidden');
+        });
+        const form = readonlydata(ele);
+        bodyModel?.appendChild(form);
     };
     tdControler.appendChild(buttondetails);
     const buttonedit = document.createElement('button');
@@ -447,16 +466,16 @@ function createTableEventRow(ele, i) {
     buttonedit.dataset.action = `edit`;
     buttonedit.textContent = `Edit`;
     buttonedit.onclick = () => {
-        const eventModel = document.getElementById("event-modal");
-        eventModel === null || eventModel === void 0 ? void 0 : eventModel.classList.remove("is-hidden");
+        const eventModel = document.getElementById('event-modal');
+        eventModel?.classList.remove('is-hidden');
         const form = createUpdateForm(ele);
-        const closeBtn = document.querySelector("button.modal__close");
-        closeBtn === null || closeBtn === void 0 ? void 0 : closeBtn.addEventListener("click", () => {
-            eventModel === null || eventModel === void 0 ? void 0 : eventModel.classList.add("is-hidden");
-            form.innerHTML = "";
+        const closeBtn = document.querySelector('button.modal__close');
+        closeBtn?.addEventListener('click', () => {
+            eventModel?.classList.add('is-hidden');
+            form.innerHTML = '';
         });
-        const mainModelContent = document.getElementById("modal-body");
-        mainModelContent === null || mainModelContent === void 0 ? void 0 : mainModelContent.appendChild(form);
+        const mainModelContent = document.getElementById('modal-body');
+        mainModelContent?.appendChild(form);
     };
     tdControler.appendChild(buttonedit);
     const buttonarchive = document.createElement('button');
@@ -464,7 +483,7 @@ function createTableEventRow(ele, i) {
     buttonarchive.dataset.action = `archive`;
     buttonarchive.textContent = `Delete`;
     buttonarchive.onclick = () => {
-        console.log("delete");
+        console.log('delete');
         // tr.remove();
         // let newArr: IEvent[] = [];
         // for (let index = 0; index < allEvents.length; index++) {
@@ -477,7 +496,7 @@ function createTableEventRow(ele, i) {
     return tr;
 }
 function createUpdateForm(event) {
-    const form = document.createElement("form");
+    const form = document.createElement('form');
     form.innerHTML = `
   
                 <!-- Title -->
@@ -594,30 +613,30 @@ function createUpdateForm(event) {
     let fieldset = null;
     // display variants fieldset
     if (event.variants) {
-        fieldset = document.createElement("fieldset");
-        fieldset.className = "variants";
-        const legend = document.createElement("legend");
-        legend.className = "variants__title";
-        legend.innerHTML = " Pricing Variants (Optional)";
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "btn btn--small";
-        button.id = "edit-btn-add-variant";
-        button.textContent = "+ Add Variant";
-        button.addEventListener("click", () => {
-            console.log("add variants");
+        fieldset = document.createElement('fieldset');
+        fieldset.className = 'variants';
+        const legend = document.createElement('legend');
+        legend.className = 'variants__title';
+        legend.innerHTML = ' Pricing Variants (Optional)';
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'btn btn--small';
+        button.id = 'edit-btn-add-variant';
+        button.textContent = '+ Add Variant';
+        button.addEventListener('click', () => {
+            console.log('add variants');
             createVariants(event);
         });
         legend.appendChild(button);
         fieldset.appendChild(legend);
-        const variantssDiv = document.createElement("div");
-        variantssDiv.className = "variants__list";
-        variantssDiv.id = "edit-variants-list";
-        // display variants 
+        const variantssDiv = document.createElement('div');
+        variantssDiv.className = 'variants__list';
+        variantssDiv.id = 'edit-variants-list';
+        // display variants
         for (let index = 0; index < event.variants.length; index++) {
             const variant = event.variants[index];
             let div = document.createElement('div');
-            div.className = 'variant-row';
+            // div.className = 'variant-row'
             div.innerHTML = `
     <input value="${variant.vName}" type="text" class="input edit-variant-row__name" />
     <input value="${variant.vQuantity}" type="number" class="input edit-variant-row__qty" placeholder="Qty" min="1" />
@@ -628,12 +647,12 @@ function createUpdateForm(event) {
     </select>
     
     `;
-            const varBtn = document.createElement("button");
-            varBtn.type = "button";
-            varBtn.className = "btn btn--danger btn--small variant-row__remove";
-            varBtn.textContent = "Remove";
-            varBtn.addEventListener("click", () => {
-                console.log("remove variant");
+            const varBtn = document.createElement('button');
+            varBtn.type = 'button';
+            varBtn.className = 'btn btn--danger btn--small variant-row__remove';
+            varBtn.textContent = 'Remove';
+            varBtn.addEventListener('click', () => {
+                console.log('remove variant');
             });
             div.appendChild(varBtn);
             variantssDiv.appendChild(div);
@@ -643,13 +662,13 @@ function createUpdateForm(event) {
     if (fieldset) {
         form.appendChild(fieldset);
     }
-    const formAction = document.createElement("div");
-    formAction.className = "form__actions";
-    const button = document.createElement("button");
-    button.className = "btn btn--primary";
-    button.type = "submit";
-    button.textContent = "Edit";
-    form.addEventListener("submit", (e) => {
+    const formAction = document.createElement('div');
+    formAction.className = 'form__actions';
+    const button = document.createElement('button');
+    button.className = 'btn btn--primary';
+    button.type = 'submit';
+    button.textContent = 'Edit';
+    form.addEventListener('submit', (e) => {
         e.preventDefault();
         const title = document.getElementById('edit-event-title').value.trim();
         const imageUrl = document.getElementById('edit-event-image').value.trim();
@@ -658,7 +677,6 @@ function createUpdateForm(event) {
         const basePrice = Number(document.getElementById('edit-event-price').value);
         const isInvalid = HandleInvalidInputs(title, imageUrl, description, numberOfSet, basePrice);
         if (!isInvalid) {
-            // extractDataFromVar()
             const _allvars = extractUpatedDataFromVar();
             const ele = {
                 title,
@@ -668,43 +686,160 @@ function createUpdateForm(event) {
                 basePrice,
                 variants: _allvars,
             };
-            const eventModel = document.getElementById("event-modal");
-            if (confirm("are sure")) {
+            const eventModel = document.getElementById('event-modal');
+            if (confirm('are sure')) {
                 const eTndex = getEventIndex(event);
                 console.log(eTndex);
                 allEvents[eTndex] = ele;
                 saveEvent(allEvents);
                 handleTable(currentPage);
-                const closeBtn = document.querySelector("button.modal__close");
-                closeBtn === null || closeBtn === void 0 ? void 0 : closeBtn.addEventListener("click", () => {
-                    eventModel === null || eventModel === void 0 ? void 0 : eventModel.classList.add("is-hidden");
+                const closeBtn = document.querySelector('button.modal__close');
+                closeBtn?.addEventListener('click', () => {
+                    eventModel?.classList.add('is-hidden');
                 });
             }
             else {
             }
-            eventModel === null || eventModel === void 0 ? void 0 : eventModel.classList.add("is-hidden");
-            form.innerHTML = "";
+            eventModel?.classList.add('is-hidden');
+            form.innerHTML = '';
         }
     });
     formAction.appendChild(button);
     form.appendChild(formAction);
     return form;
 }
+function readonlydata(event) {
+    const form = document.createElement('form');
+    form.innerHTML = `
+  
+                <!-- Title -->
+                <div class="form__group">
+                  <label class="form__label" for="event-title"
+                    >Event Title</label
+                  >
+                  <input
+                    type="text"
+                    id="edit-event-title"
+                    class="input" readonly
+                    placeholder="Enter event title"
+                    value="${event.title}"
+                    required
+                  />
+                </div>
+
+                <!-- Image URL -->
+                <div class="form__group">
+                  <label class="form__label" for="event-image">Image URL</label>
+                   
+
+                  <div>
+                    <img
+                      id="preview"
+                      src="${event.imageUrl}"
+                      alt="Image Preview"
+                     
+                    />
+                  </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form__group">
+                  <label class="form__label" for="event-description"
+                    >Description</label
+                  >
+                  <textarea
+                    id="edit-event-description"
+                    class="input" readonly
+                    placeholder="Describe the event..."
+                    rows="4"
+                  >${event.description}</textarea>
+                </div>
+
+                <!-- Seats -->
+                <div class="form__group">
+                  <label class="form__label" for="event-seats"
+                    >Number of Seats</label
+                  >
+                  <input
+                    type="number"
+                    id="edit-event-seats"
+                    class="input" readonly
+                    placeholder="100"
+                     value="${event.numberOfSet}"
+                    min="1"
+                    required
+                  />
+                </div>
+
+                <!-- Base Price -->
+                <div class="form__group">
+                  <label class="form__label" for="event-price"
+                    >Base Price ($)</label
+                  >
+                  <input
+                    type="number"
+                    id="edit-event-price" readonly
+                    class="input"
+                     value="${event.basePrice}"
+                    placeholder="50.00"
+                    min="0"
+                    step="0.01"
+                    required
+                  />
+                </div>
+
+
+              
+                
+  `;
+    let fieldset = null;
+    // display variants fieldset
+    if (event.variants) {
+        fieldset = document.createElement('fieldset');
+        fieldset.className = 'variants';
+        const legend = document.createElement('legend');
+        legend.className = 'variants__title';
+        legend.innerHTML = ' Pricing Variants';
+        fieldset.appendChild(legend);
+        const variantssDiv = document.createElement('div');
+        variantssDiv.className = 'variants__list';
+        variantssDiv.id = 'edit-variants-list';
+        // display variants
+        for (let index = 0; index < event.variants.length; index++) {
+            const variant = event.variants[index];
+            let div = document.createElement('div');
+            // div.className = 'variant-row'
+            div.innerHTML = `
+    <input value="${variant.vName}" type="text" readonly class="input edit-variant-row__name" />
+    <input value="${variant.vQuantity}" type="number" readonly class="input edit-variant-row__qty" placeholder="Qty" min="1" />
+    <input value="${variant.vValue}" type="number" readonly class="input edit-variant-row__value" placeholder="Value" step="0.01" />
+    <input value="${variant.isFixed ? 'Fixed' : 'perCent'}" type="text" readonly class="input edit-variant-row__name" />
+    `;
+            variantssDiv.appendChild(div);
+        }
+        fieldset.appendChild(variantssDiv);
+    }
+    if (fieldset) {
+        form.appendChild(fieldset);
+    }
+    return form;
+}
 function getEventIndex(event) {
     for (let index = 0; index < allEvents.length; index++) {
         const element = allEvents[index];
-        if (event.title == element.title && event.description == element.description) {
+        if (event.title == element.title &&
+            event.description == element.description) {
             return index;
         }
     }
     return -1;
 }
 function createVariants(event) {
-    let variant = { vName: "", vQuantity: 0, vValue: 0, isFixed: false };
+    let variant = { vName: '', vQuantity: 0, vValue: 0, isFixed: false };
     // event.variants?.push(variant);
-    const variantssDiv = document.getElementById("edit-variants-list");
+    const variantssDiv = document.getElementById('edit-variants-list');
     let div = document.createElement('div');
-    div.className = 'variant-row';
+    // div.className = 'variant-row'
     div.innerHTML = `
     <input value="${variant.vName}" type="text" class="input edit-variant-row__name" placeholder="Variant name (e.g., 'Early Bird')" />
     <input value="${variant.vQuantity}" type="number" class="input edit-variant-row__qty" placeholder="Qty" min="1" />
@@ -715,19 +850,18 @@ function createVariants(event) {
         </select>
     
     `;
-    const varBtn = document.createElement("button");
-    varBtn.type = "button";
-    varBtn.className = "btn btn--danger btn--small variant-row__remove";
-    varBtn.textContent = "Remove";
-    varBtn.addEventListener("click", () => {
-    });
+    const varBtn = document.createElement('button');
+    varBtn.type = 'button';
+    varBtn.className = 'btn btn--danger btn--small variant-row__remove';
+    varBtn.textContent = 'Remove';
+    varBtn.addEventListener('click', () => { });
     div.appendChild(varBtn);
-    variantssDiv === null || variantssDiv === void 0 ? void 0 : variantssDiv.appendChild(div);
+    variantssDiv?.appendChild(div);
 }
 function extractUpatedDataFromVar() {
     const allVars = document.getElementById('edit-variants-list');
-    const childs = allVars === null || allVars === void 0 ? void 0 : allVars.children;
-    if ((childs === null || childs === void 0 ? void 0 : childs.length) == 0) {
+    const childs = allVars?.children;
+    if (childs?.length == 0) {
         return;
     }
     let allvars = [];
@@ -736,7 +870,7 @@ function extractUpatedDataFromVar() {
         const vQuantity = document.getElementsByClassName('input edit-variant-row__qty')[index].value;
         const vValue = document.getElementsByClassName('input edit-variant-row__value')[index].value;
         const mySelect = document.getElementsByClassName('select edit-variant-row__type')[index];
-        const isFixed = (mySelect === null || mySelect === void 0 ? void 0 : mySelect.value) == 'fixed';
+        const isFixed = mySelect?.value == 'fixed';
         console.log({
             vName,
             vQuantity: Number(vQuantity),
