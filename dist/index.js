@@ -1,6 +1,6 @@
 import * as ChartJs from 'chart.js';
 const allEventsKey = 'eventsKey';
-const archiveEventsKey = "archive-eventsKey";
+const archiveEventsKey = 'archive-eventsKey';
 let allEvents = [];
 let achiveEvents = [];
 let subEvents = [];
@@ -58,11 +58,14 @@ function selectSection(event) {
         event.currentTarget.classList.add('is-active');
         const data = event.currentTarget.dataset.screen;
         const section = document.querySelector(`section[data-screen="${data}"]`);
-        section === null || section === void 0 ? void 0 : section.classList.add('is-visible');
+        section?.classList.add('is-visible');
     }
 }
 function clearInputs() {
     const form = document.getElementById('event-form');
+    const preview = document.getElementById('preview');
+    preview.src = '';
+    preview.classList.add('is-hidden');
     const allv = document.getElementsByClassName('variant-row');
     for (let index = 0; index < allv.length; index++) {
         const element = allv[index];
@@ -70,7 +73,7 @@ function clearInputs() {
         element.remove();
     }
     variants = [];
-    form === null || form === void 0 ? void 0 : form.reset();
+    form?.reset();
 }
 function addEvent(e) {
     const form = document.getElementById('event-form');
@@ -100,12 +103,11 @@ function addEvent(e) {
         saveEvent(allEvents);
         variants = [];
         const preview = document.getElementById('preview');
-        preview.classList.add("is-hidden");
-        form === null || form === void 0 ? void 0 : form.reset();
+        preview.classList.add('is-hidden');
+        form?.reset();
     }
 }
 function addVariant() {
-    var _a;
     let div = document.createElement('div');
     div.className = 'variant-row';
     div.innerHTML = `
@@ -118,7 +120,7 @@ function addVariant() {
         </select>
     <button type="button" class="btn btn--danger btn--small variant-row__remove">Remove</button>
     `;
-    (_a = document.getElementById('variants-list')) === null || _a === void 0 ? void 0 : _a.appendChild(div);
+    document.getElementById('variants-list')?.appendChild(div);
     console.log(div.children);
     div.children[4].addEventListener('click', () => {
         div.remove();
@@ -126,18 +128,18 @@ function addVariant() {
 }
 function extractDataFromVar() {
     const allVars = document.getElementById('variants-list');
-    const childs = allVars === null || allVars === void 0 ? void 0 : allVars.children;
-    if ((childs === null || childs === void 0 ? void 0 : childs.length) == 0) {
+    const childs = allVars?.children;
+    if (childs?.length == 0) {
         return;
     }
-    console.log('extractDataFromVar: ', childs === null || childs === void 0 ? void 0 : childs.length);
+    console.log('extractDataFromVar: ', childs?.length);
     for (let index = 0; index < childs.length; index++) {
         const vName = document.getElementsByClassName('input variant-row__name')[index].value;
         const vQuantity = document.getElementsByClassName('input variant-row__qty')[index].value;
         const vValue = document.getElementsByClassName('input variant-row__value')[index].value;
         const mySelect = document.getElementsByClassName('select variant-row__type')[index];
-        const isFixed = (mySelect === null || mySelect === void 0 ? void 0 : mySelect.value) == 'fixed';
-        variants === null || variants === void 0 ? void 0 : variants.push({
+        const isFixed = mySelect?.value == 'fixed';
+        variants?.push({
             vName,
             vQuantity: Number(vQuantity),
             vValue: Number(vValue),
@@ -160,7 +162,7 @@ function HandleInvalidInputs(title, imageUrl, description, numberOfSet, basePric
         numberOfSetTest ||
         basePriceTest) {
         // alert("S'il vous plain, saisir valid number")
-        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.classList.remove('is-hidden');
+        errorDiv?.classList.remove('is-hidden');
         const paragraph = document.createElement('p');
         paragraph.style.fontSize = '15px';
         paragraph.style.fontWeight = 'bold';
@@ -183,12 +185,12 @@ function HandleInvalidInputs(title, imageUrl, description, numberOfSet, basePric
         if (!basePriceTest) {
             ul.innerHTML += '<li>Invalid base price</li>';
         }
-        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.appendChild(paragraph);
-        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.appendChild(ul);
+        errorDiv?.appendChild(paragraph);
+        errorDiv?.appendChild(ul);
         return true;
     }
     else {
-        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.classList.add('is-hidden');
+        errorDiv?.classList.add('is-hidden');
         return false;
     }
 }
@@ -242,7 +244,7 @@ function createPaginationBtns() {
         button.addEventListener('click', () => {
             handleTable(index + 1);
         });
-        navigationBtn === null || navigationBtn === void 0 ? void 0 : navigationBtn.appendChild(button);
+        navigationBtn?.appendChild(button);
     }
 }
 function pagination(page = 1, searchList = []) {
@@ -289,7 +291,7 @@ function handleTable(page, searchList = []) {
     for (let i = 0; i < subEvents.length; i++) {
         const ele = subEvents[i];
         let tr = createTableEventRow(ele, i);
-        tbody === null || tbody === void 0 ? void 0 : tbody.appendChild(tr);
+        tbody?.appendChild(tr);
     }
 }
 function searchByTitle() {
@@ -311,7 +313,7 @@ function searchByTitle() {
 function imageFocusOut() {
     const preview = document.getElementById('preview');
     const imageEvent = document.getElementById('event-image');
-    imageEvent === null || imageEvent === void 0 ? void 0 : imageEvent.addEventListener('input', (event) => {
+    imageEvent?.addEventListener('input', (event) => {
         const value = event.currentTarget.value;
         preview.src = value;
         preview.classList.remove('is-hidden');
@@ -325,18 +327,17 @@ function imgRadio() {
         r.addEventListener('change', () => {
             const value = r.value;
             if (value === 'upload') {
-                uploadInput === null || uploadInput === void 0 ? void 0 : uploadInput.classList.remove('is-hidden');
-                linkInput === null || linkInput === void 0 ? void 0 : linkInput.classList.add('is-hidden');
+                uploadInput?.classList.remove('is-hidden');
+                linkInput?.classList.add('is-hidden');
             }
             else {
-                linkInput === null || linkInput === void 0 ? void 0 : linkInput.classList.remove('is-hidden');
-                uploadInput === null || uploadInput === void 0 ? void 0 : uploadInput.classList.add('is-hidden');
+                linkInput?.classList.remove('is-hidden');
+                uploadInput?.classList.add('is-hidden');
             }
         });
     });
 }
 function init() {
-    var _a, _b, _c;
     getEventsStorage();
     getArchiveEventsStorage();
     renderGraph();
@@ -349,12 +350,15 @@ function init() {
     document
         .querySelectorAll('.sidebar__btn')
         .forEach((btn) => btn.addEventListener('click', selectSection));
-    (_a = document
-        .querySelector('.form__actions button.btn--primary')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', addEvent);
-    (_b = document
-        .querySelector('button.btn--ghost')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', clearInputs);
-    (_c = document
-        .getElementById('btn-add-variant')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', addVariant);
+    document
+        .querySelector('.form__actions button.btn--primary')
+        ?.addEventListener('click', addEvent);
+    document
+        .querySelector('button.btn--ghost')
+        ?.addEventListener('click', clearInputs);
+    document
+        .getElementById('btn-add-variant')
+        ?.addEventListener('click', addVariant);
 }
 function sort() {
     function titleAsc() {
@@ -416,24 +420,24 @@ function sort() {
             }
         }
     }
-    const sortEvents = document.getElementById("sort-events");
-    sortEvents.addEventListener("change", (event) => {
+    const sortEvents = document.getElementById('sort-events');
+    sortEvents.addEventListener('change', (event) => {
         const value = event.target.value;
         switch (value) {
-            case "title-asc":
+            case 'title-asc':
                 titleAsc();
                 break;
-            case "title-desc":
-                console.log("click");
+            case 'title-desc':
+                console.log('click');
                 titleDesc();
                 break;
-            case "price-asc":
+            case 'price-asc':
                 priceAsc();
                 break;
-            case "price-desc":
+            case 'price-desc':
                 priceDesc();
                 break;
-            case "seats-asc":
+            case 'seats-asc':
                 seatsAsc();
                 break;
         }
@@ -444,14 +448,14 @@ init();
 function uploadImage() {
     const imageInput = document.getElementById('imageInput');
     const preview = document.getElementById('preview');
-    imageInput === null || imageInput === void 0 ? void 0 : imageInput.addEventListener('change', (event) => {
-        var _a;
+    imageInput?.addEventListener('change', (event) => {
         const target = event.target; // cast here
-        const file = (_a = target.files) === null || _a === void 0 ? void 0 : _a[0];
+        const file = target.files?.[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 preview.src = e.target.result;
+                preview.classList.remove('is-hidden');
                 const linkInput = document.querySelector("input[class*='link']");
                 linkInput.value = e.target.result;
             };
@@ -462,15 +466,15 @@ function uploadImage() {
         }
     });
 }
-function handleTableArchive(page, searchList = []) {
-    pagination(page, searchList);
+function handleTableArchive(page) {
+    pagination(page);
     // createPaginationBtns()
     const tbody = document.querySelector('#archive-table .table__body');
     tbody.innerHTML = '';
     for (let i = 0; i < achiveEvents.length; i++) {
         const ele = achiveEvents[i];
-        let tr = createTableEventRow(ele, i);
-        tbody === null || tbody === void 0 ? void 0 : tbody.appendChild(tr);
+        let tr = createArchiveTableEventRow(ele, i);
+        tbody?.appendChild(tr);
     }
 }
 function removeFromArray(ele) {
@@ -496,7 +500,117 @@ function removeFromArray(ele) {
     handleTable(currentPage);
 }
 function addToArchive(arr) {
-    handleTableArchive(1, arr);
+    handleTableArchive(1);
+}
+function createArchiveTableEventRow(ele, i) {
+    const tr = document.createElement('tr');
+    tr.className = 'table__row';
+    tr.dataset.eventId = (i + 1).toString();
+    const tdId = document.createElement('td');
+    tdId.textContent = `${i + 1}`;
+    tr.appendChild(tdId);
+    const tdImg = document.createElement('td');
+    tdImg.style.width = '100px';
+    tdImg.style.height = '100px';
+    tdImg.innerHTML = `<img src="${ele.imageUrl}"
+  alt="" style="height="100%"; width="100%";  object-fit: fill;">`;
+    tr.appendChild(tdImg);
+    const tdTitle = document.createElement('td');
+    tdTitle.textContent = `${ele.title}`;
+    tr.appendChild(tdTitle);
+    const tdSeats = document.createElement('td');
+    tdSeats.textContent = `${ele.numberOfSet}`;
+    tr.appendChild(tdSeats);
+    const tdPrice = document.createElement('td');
+    tdPrice.textContent = `${ele.basePrice}`;
+    tr.appendChild(tdPrice);
+    const tdVariants = document.createElement('td');
+    tdVariants.style.position = 'relative';
+    tdVariants.id = `vari-${i + 1}`;
+    const button = document.createElement('button');
+    button.id = `vari-id-${i + 1}`;
+    button.className = `btn btn--small`;
+    button.dataset.action = `details`;
+    button.textContent = `Variants`;
+    button.onclick = () => {
+        console.log('in click');
+        const bodyModel = document.getElementById('vari-modal-body');
+        const modal = document.getElementById('vari-event-modal');
+        modal?.classList.remove('is-hidden');
+        const close = document.getElementById('vari-close-modal');
+        close?.addEventListener('click', () => {
+            bodyModel.innerHTML = '';
+            modal?.classList.add('is-hidden');
+        });
+        let content = '';
+        ele.variants?.forEach((v, i) => {
+            content += `<tr class="table__row" data-event="${i + 1}">
+        <td>${v.vName}</td>
+        <td>${v.vQuantity}</td>
+        <td>${v.vValue}</td>
+        <td>${v.isFixed ? 'fixed' : 'percent'}</td>
+      </tr>`;
+        });
+        const table = document.createElement('table');
+        table.className = 'table';
+        table.id = 'varTable';
+        table.innerHTML = `
+     <thead class="table__head">
+      <tr class="table__row">
+        <th>Title</th>
+        <th>Quantity</th>
+        <th>Value</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody class="table__body">
+      ${content}
+    </tbody>
+  `;
+        bodyModel?.appendChild(table);
+    };
+    tdVariants.appendChild(button);
+    tr.appendChild(tdVariants);
+    // =========================================
+    const tdControler = document.createElement('td');
+    tdControler.id = `actions-${i + 1}`;
+    const buttondetails = document.createElement('button');
+    buttondetails.className = `btn btn--small`;
+    buttondetails.dataset.action = `details`;
+    buttondetails.textContent = `Details`;
+    buttondetails.onclick = () => {
+        console.log('this is details');
+        const bodyModel = document.getElementById('details-modal-body');
+        const modal = document.getElementById('details-event-modal');
+        modal?.classList.remove('is-hidden');
+        const close = document.getElementById('details-close-modal');
+        close?.addEventListener('click', () => {
+            bodyModel.innerHTML = '';
+            modal?.classList.add('is-hidden');
+        });
+        const form = readonlydata(ele);
+        bodyModel?.appendChild(form);
+    };
+    tdControler.appendChild(buttondetails);
+    // const buttonedit = document.createElement('button')
+    // buttonedit.className = `btn btn--small`
+    // buttonedit.dataset.action = `edit`
+    // buttonedit.textContent = `Edit`
+    // buttonedit.onclick = () => {
+    //   const eventModel = document.getElementById('event-modal')
+    //   eventModel?.classList.remove('is-hidden')
+    //   const form = createUpdateForm(ele) as HTMLFormElement
+    //   const closeBtn = document.querySelector('button.modal__close')
+    //   closeBtn?.addEventListener('click', () => {
+    //     eventModel?.classList.add('is-hidden')
+    //     form.innerHTML = ''
+    //   })
+    //   const mainModelContent = document.getElementById('modal-body')
+    //   mainModelContent?.appendChild(form)
+    // }
+    // tdControler.appendChild(buttonedit)
+    tr.appendChild(tdControler);
+    return tr;
 }
 function createTableEventRow(ele, i) {
     const tr = document.createElement('tr');
@@ -529,18 +643,17 @@ function createTableEventRow(ele, i) {
     button.dataset.action = `details`;
     button.textContent = `Variants`;
     button.onclick = () => {
-        var _a;
         console.log('in click');
         const bodyModel = document.getElementById('vari-modal-body');
         const modal = document.getElementById('vari-event-modal');
-        modal === null || modal === void 0 ? void 0 : modal.classList.remove('is-hidden');
+        modal?.classList.remove('is-hidden');
         const close = document.getElementById('vari-close-modal');
-        close === null || close === void 0 ? void 0 : close.addEventListener('click', () => {
+        close?.addEventListener('click', () => {
             bodyModel.innerHTML = '';
-            modal === null || modal === void 0 ? void 0 : modal.classList.add('is-hidden');
+            modal?.classList.add('is-hidden');
         });
         let content = '';
-        (_a = ele.variants) === null || _a === void 0 ? void 0 : _a.forEach((v, i) => {
+        ele.variants?.forEach((v, i) => {
             content += `<tr class="table__row" data-event="${i + 1}">
         <td>${v.vName}</td>
         <td>${v.vQuantity}</td>
@@ -564,12 +677,8 @@ function createTableEventRow(ele, i) {
       ${content}
     </tbody>
   `;
-        bodyModel === null || bodyModel === void 0 ? void 0 : bodyModel.appendChild(table);
+        bodyModel?.appendChild(table);
     };
-    // button.onmouseleave = () => {
-    //   button.classList.toggle('is-hidden')
-    //   varTableHover()
-    // }
     tdVariants.appendChild(button);
     // tdVariants.appendChild(table)
     tr.appendChild(tdVariants);
@@ -583,14 +692,14 @@ function createTableEventRow(ele, i) {
         console.log('this is details');
         const bodyModel = document.getElementById('details-modal-body');
         const modal = document.getElementById('details-event-modal');
-        modal === null || modal === void 0 ? void 0 : modal.classList.remove('is-hidden');
+        modal?.classList.remove('is-hidden');
         const close = document.getElementById('details-close-modal');
-        close === null || close === void 0 ? void 0 : close.addEventListener('click', () => {
+        close?.addEventListener('click', () => {
             bodyModel.innerHTML = '';
-            modal === null || modal === void 0 ? void 0 : modal.classList.add('is-hidden');
+            modal?.classList.add('is-hidden');
         });
         const form = readonlydata(ele);
-        bodyModel === null || bodyModel === void 0 ? void 0 : bodyModel.appendChild(form);
+        bodyModel?.appendChild(form);
     };
     tdControler.appendChild(buttondetails);
     const buttonedit = document.createElement('button');
@@ -599,15 +708,15 @@ function createTableEventRow(ele, i) {
     buttonedit.textContent = `Edit`;
     buttonedit.onclick = () => {
         const eventModel = document.getElementById('event-modal');
-        eventModel === null || eventModel === void 0 ? void 0 : eventModel.classList.remove('is-hidden');
+        eventModel?.classList.remove('is-hidden');
         const form = createUpdateForm(ele);
         const closeBtn = document.querySelector('button.modal__close');
-        closeBtn === null || closeBtn === void 0 ? void 0 : closeBtn.addEventListener('click', () => {
-            eventModel === null || eventModel === void 0 ? void 0 : eventModel.classList.add('is-hidden');
+        closeBtn?.addEventListener('click', () => {
+            eventModel?.classList.add('is-hidden');
             form.innerHTML = '';
         });
         const mainModelContent = document.getElementById('modal-body');
-        mainModelContent === null || mainModelContent === void 0 ? void 0 : mainModelContent.appendChild(form);
+        mainModelContent?.appendChild(form);
     };
     tdControler.appendChild(buttonedit);
     const buttonarchive = document.createElement('button');
@@ -642,50 +751,7 @@ function createUpdateForm(event) {
                 </div>
 
                 <!-- Image URL -->
-                <div class="form__group">
-                  <label class="form__label" for="event-image">Image URL</label>
-                  <p>Please select your image import type:</p>
-                  <div class="choose-type">
-                    <input
-                      type="radio"
-                      id="upload"
-                      name="imgType"
-                      value="upload"
-                    />
-                    <label for="upload">Upload</label>
-                    <input
-                      type="radio"
-                      id="link"
-                      name="imgType"
-                      value="link"
-                      checked
-                    />
-                    <label for="link">Link</label><br />
-                  </div>
-
-                  <input
-                    type="url"
-                    id="edit-event-image"
-                    class="input link"
-                    value="${event.imageUrl}"
-                    placeholder="https://example.com/image.jpg"
-                  />
-                  <input
-                    class="is-hidden upload"
-                    type="file"
-                    id="imageInput"
-                    accept="image/*"
-                  />
-
-                  <div>
-                    <img
-                      id="preview"
-                      src="${event.imageUrl}"
-                      alt="Image Preview"
-                     
-                    />
-                  </div>
-                </div>
+               
 
                 <!-- Description -->
                 <div class="form__group">
@@ -735,8 +801,37 @@ function createUpdateForm(event) {
 
 
               
-                
+            
   `;
+    const div = document.createElement('div');
+    div.classList.add('form__group');
+    div.innerHTML = `<label class="form__label" for="event-image">Image URL</label>
+                  <p>Please upload your image :</p>`;
+    const inputFile = document.createElement('input');
+    inputFile.type = 'file';
+    inputFile.id = 'modal-imageInput';
+    inputFile.accept = 'image/*';
+    const imgDiv = document.createElement("div");
+    const img = document.createElement('img');
+    img.id = 'preview';
+    img.src = event.imageUrl;
+    img.alt = 'Image Preview';
+    imgDiv.appendChild(img);
+    let newImage;
+    inputFile?.addEventListener('change', (event) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                img.src = e.target?.result;
+                newImage = e.target?.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    div.appendChild(inputFile);
+    div.appendChild(imgDiv);
+    form.appendChild(div);
     let fieldset = null;
     // display variants fieldset
     if (event.variants) {
@@ -784,14 +879,15 @@ function createUpdateForm(event) {
                 let newVars = [];
                 for (let index = 0; index < event.variants.length; index++) {
                     const va = event.variants[index];
-                    if (variant.vName !== va.vName && variant.vQuantity === va.vQuantity) {
+                    if (variant.vName !== va.vName &&
+                        variant.vQuantity === va.vQuantity) {
                         newVars[i] = va;
                         i++;
                     }
                 }
                 event.variants != newVars;
                 variantssDiv.removeChild(div);
-                console.log("done");
+                console.log('done');
             });
             div.appendChild(varBtn);
             variantssDiv.appendChild(div);
@@ -810,16 +906,18 @@ function createUpdateForm(event) {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         const title = document.getElementById('edit-event-title').value.trim();
-        const imageUrl = document.getElementById('edit-event-image').value.trim();
+        // const imageUrl = (
+        //   document.getElementById('edit-event-image') as HTMLInputElement
+        // ).value.trim()
         const description = document.getElementById('edit-event-description').value.trim();
         const numberOfSet = Number(document.getElementById('edit-event-seats').value);
         const basePrice = Number(document.getElementById('edit-event-price').value);
-        const isInvalid = HandleInvalidInputs(title, imageUrl, description, numberOfSet, basePrice);
+        const isInvalid = HandleInvalidInputs(title, newImage, description, numberOfSet, basePrice);
         if (!isInvalid) {
             const _allvars = extractUpatedDataFromVar();
             const ele = {
                 title,
-                imageUrl,
+                imageUrl: newImage,
                 description,
                 numberOfSet,
                 basePrice,
@@ -833,14 +931,17 @@ function createUpdateForm(event) {
                 saveEvent(allEvents);
                 handleTable(currentPage);
                 const closeBtn = document.querySelector('button.modal__close');
-                closeBtn === null || closeBtn === void 0 ? void 0 : closeBtn.addEventListener('click', () => {
-                    eventModel === null || eventModel === void 0 ? void 0 : eventModel.classList.add('is-hidden');
+                closeBtn?.addEventListener('click', () => {
+                    eventModel?.classList.add('is-hidden');
                 });
             }
             else {
             }
-            eventModel === null || eventModel === void 0 ? void 0 : eventModel.classList.add('is-hidden');
+            eventModel?.classList.add('is-hidden');
             form.innerHTML = '';
+        }
+        else {
+            alert('some change');
         }
     });
     formAction.appendChild(button);
@@ -995,12 +1096,12 @@ function createVariants(event) {
     varBtn.textContent = 'Remove';
     varBtn.addEventListener('click', () => { });
     div.appendChild(varBtn);
-    variantssDiv === null || variantssDiv === void 0 ? void 0 : variantssDiv.appendChild(div);
+    variantssDiv?.appendChild(div);
 }
 function extractUpatedDataFromVar() {
     const allVars = document.getElementById('edit-variants-list');
-    const childs = allVars === null || allVars === void 0 ? void 0 : allVars.children;
-    if ((childs === null || childs === void 0 ? void 0 : childs.length) == 0) {
+    const childs = allVars?.children;
+    if (childs?.length == 0) {
         return;
     }
     let allvars = [];
@@ -1009,7 +1110,7 @@ function extractUpatedDataFromVar() {
         const vQuantity = document.getElementsByClassName('input edit-variant-row__qty')[index].value;
         const vValue = document.getElementsByClassName('input edit-variant-row__value')[index].value;
         const mySelect = document.getElementsByClassName('select edit-variant-row__type')[index];
-        const isFixed = (mySelect === null || mySelect === void 0 ? void 0 : mySelect.value) == 'fixed';
+        const isFixed = mySelect?.value == 'fixed';
         console.log({
             vName,
             vQuantity: Number(vQuantity),
