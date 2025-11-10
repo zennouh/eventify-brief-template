@@ -58,7 +58,7 @@ function selectSection(event) {
         event.currentTarget.classList.add('is-active');
         const data = event.currentTarget.dataset.screen;
         const section = document.querySelector(`section[data-screen="${data}"]`);
-        section?.classList.add('is-visible');
+        section === null || section === void 0 ? void 0 : section.classList.add('is-visible');
     }
 }
 function clearInputs() {
@@ -73,7 +73,7 @@ function clearInputs() {
         element.remove();
     }
     variants = [];
-    form?.reset();
+    form === null || form === void 0 ? void 0 : form.reset();
 }
 function addEvent(e) {
     const form = document.getElementById('event-form');
@@ -104,10 +104,11 @@ function addEvent(e) {
         variants = [];
         const preview = document.getElementById('preview');
         preview.classList.add('is-hidden');
-        form?.reset();
+        form === null || form === void 0 ? void 0 : form.reset();
     }
 }
 function addVariant() {
+    var _a;
     let div = document.createElement('div');
     div.className = 'variant-row';
     div.innerHTML = `
@@ -120,7 +121,7 @@ function addVariant() {
         </select>
     <button type="button" class="btn btn--danger btn--small variant-row__remove">Remove</button>
     `;
-    document.getElementById('variants-list')?.appendChild(div);
+    (_a = document.getElementById('variants-list')) === null || _a === void 0 ? void 0 : _a.appendChild(div);
     console.log(div.children);
     div.children[4].addEventListener('click', () => {
         div.remove();
@@ -128,18 +129,18 @@ function addVariant() {
 }
 function extractDataFromVar() {
     const allVars = document.getElementById('variants-list');
-    const childs = allVars?.children;
-    if (childs?.length == 0) {
+    const childs = allVars === null || allVars === void 0 ? void 0 : allVars.children;
+    if ((childs === null || childs === void 0 ? void 0 : childs.length) == 0) {
         return;
     }
-    console.log('extractDataFromVar: ', childs?.length);
+    console.log('extractDataFromVar: ', childs === null || childs === void 0 ? void 0 : childs.length);
     for (let index = 0; index < childs.length; index++) {
         const vName = document.getElementsByClassName('input variant-row__name')[index].value;
         const vQuantity = document.getElementsByClassName('input variant-row__qty')[index].value;
         const vValue = document.getElementsByClassName('input variant-row__value')[index].value;
         const mySelect = document.getElementsByClassName('select variant-row__type')[index];
-        const isFixed = mySelect?.value == 'fixed';
-        variants?.push({
+        const isFixed = (mySelect === null || mySelect === void 0 ? void 0 : mySelect.value) == 'fixed';
+        variants === null || variants === void 0 ? void 0 : variants.push({
             vName,
             vQuantity: Number(vQuantity),
             vValue: Number(vValue),
@@ -162,7 +163,7 @@ function HandleInvalidInputs(title, imageUrl, description, numberOfSet, basePric
         numberOfSetTest ||
         basePriceTest) {
         // alert("S'il vous plain, saisir valid number")
-        errorDiv?.classList.remove('is-hidden');
+        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.classList.remove('is-hidden');
         const paragraph = document.createElement('p');
         paragraph.style.fontSize = '15px';
         paragraph.style.fontWeight = 'bold';
@@ -185,12 +186,12 @@ function HandleInvalidInputs(title, imageUrl, description, numberOfSet, basePric
         if (!basePriceTest) {
             ul.innerHTML += '<li>Invalid base price</li>';
         }
-        errorDiv?.appendChild(paragraph);
-        errorDiv?.appendChild(ul);
+        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.appendChild(paragraph);
+        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.appendChild(ul);
         return true;
     }
     else {
-        errorDiv?.classList.add('is-hidden');
+        errorDiv === null || errorDiv === void 0 ? void 0 : errorDiv.classList.add('is-hidden');
         return false;
     }
 }
@@ -244,7 +245,7 @@ function createPaginationBtns() {
         button.addEventListener('click', () => {
             handleTable(index + 1);
         });
-        navigationBtn?.appendChild(button);
+        navigationBtn === null || navigationBtn === void 0 ? void 0 : navigationBtn.appendChild(button);
     }
 }
 function pagination(page = 1, searchList = []) {
@@ -291,7 +292,7 @@ function handleTable(page, searchList = []) {
     for (let i = 0; i < subEvents.length; i++) {
         const ele = subEvents[i];
         let tr = createTableEventRow(ele, i);
-        tbody?.appendChild(tr);
+        tbody === null || tbody === void 0 ? void 0 : tbody.appendChild(tr);
     }
 }
 function searchByTitle() {
@@ -313,7 +314,7 @@ function searchByTitle() {
 function imageFocusOut() {
     const preview = document.getElementById('preview');
     const imageEvent = document.getElementById('event-image');
-    imageEvent?.addEventListener('input', (event) => {
+    imageEvent === null || imageEvent === void 0 ? void 0 : imageEvent.addEventListener('input', (event) => {
         const value = event.currentTarget.value;
         preview.src = value;
         preview.classList.remove('is-hidden');
@@ -327,17 +328,18 @@ function imgRadio() {
         r.addEventListener('change', () => {
             const value = r.value;
             if (value === 'upload') {
-                uploadInput?.classList.remove('is-hidden');
-                linkInput?.classList.add('is-hidden');
+                uploadInput === null || uploadInput === void 0 ? void 0 : uploadInput.classList.remove('is-hidden');
+                linkInput === null || linkInput === void 0 ? void 0 : linkInput.classList.add('is-hidden');
             }
             else {
-                linkInput?.classList.remove('is-hidden');
-                uploadInput?.classList.add('is-hidden');
+                linkInput === null || linkInput === void 0 ? void 0 : linkInput.classList.remove('is-hidden');
+                uploadInput === null || uploadInput === void 0 ? void 0 : uploadInput.classList.add('is-hidden');
             }
         });
     });
 }
 function init() {
+    var _a, _b, _c;
     getEventsStorage();
     getArchiveEventsStorage();
     renderGraph();
@@ -350,15 +352,12 @@ function init() {
     document
         .querySelectorAll('.sidebar__btn')
         .forEach((btn) => btn.addEventListener('click', selectSection));
-    document
-        .querySelector('.form__actions button.btn--primary')
-        ?.addEventListener('click', addEvent);
-    document
-        .querySelector('button.btn--ghost')
-        ?.addEventListener('click', clearInputs);
-    document
-        .getElementById('btn-add-variant')
-        ?.addEventListener('click', addVariant);
+    (_a = document
+        .querySelector('.form__actions button.btn--primary')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', addEvent);
+    (_b = document
+        .querySelector('button.btn--ghost')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', clearInputs);
+    (_c = document
+        .getElementById('btn-add-variant')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', addVariant);
 }
 function sort() {
     function titleAsc() {
@@ -448,9 +447,10 @@ init();
 function uploadImage() {
     const imageInput = document.getElementById('imageInput');
     const preview = document.getElementById('preview');
-    imageInput?.addEventListener('change', (event) => {
+    imageInput === null || imageInput === void 0 ? void 0 : imageInput.addEventListener('change', (event) => {
+        var _a;
         const target = event.target; // cast here
-        const file = target.files?.[0];
+        const file = (_a = target.files) === null || _a === void 0 ? void 0 : _a[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -474,7 +474,7 @@ function handleTableArchive(page) {
     for (let i = 0; i < achiveEvents.length; i++) {
         const ele = achiveEvents[i];
         let tr = createArchiveTableEventRow(ele, i);
-        tbody?.appendChild(tr);
+        tbody === null || tbody === void 0 ? void 0 : tbody.appendChild(tr);
     }
 }
 function removeFromArray(ele) {
@@ -533,17 +533,18 @@ function createArchiveTableEventRow(ele, i) {
     button.dataset.action = `details`;
     button.textContent = `Variants`;
     button.onclick = () => {
+        var _a;
         console.log('in click');
         const bodyModel = document.getElementById('vari-modal-body');
         const modal = document.getElementById('vari-event-modal');
-        modal?.classList.remove('is-hidden');
+        modal === null || modal === void 0 ? void 0 : modal.classList.remove('is-hidden');
         const close = document.getElementById('vari-close-modal');
-        close?.addEventListener('click', () => {
+        close === null || close === void 0 ? void 0 : close.addEventListener('click', () => {
             bodyModel.innerHTML = '';
-            modal?.classList.add('is-hidden');
+            modal === null || modal === void 0 ? void 0 : modal.classList.add('is-hidden');
         });
         let content = '';
-        ele.variants?.forEach((v, i) => {
+        (_a = ele.variants) === null || _a === void 0 ? void 0 : _a.forEach((v, i) => {
             content += `<tr class="table__row" data-event="${i + 1}">
         <td>${v.vName}</td>
         <td>${v.vQuantity}</td>
@@ -567,7 +568,7 @@ function createArchiveTableEventRow(ele, i) {
       ${content}
     </tbody>
   `;
-        bodyModel?.appendChild(table);
+        bodyModel === null || bodyModel === void 0 ? void 0 : bodyModel.appendChild(table);
     };
     tdVariants.appendChild(button);
     tr.appendChild(tdVariants);
@@ -582,16 +583,30 @@ function createArchiveTableEventRow(ele, i) {
         console.log('this is details');
         const bodyModel = document.getElementById('details-modal-body');
         const modal = document.getElementById('details-event-modal');
-        modal?.classList.remove('is-hidden');
+        modal === null || modal === void 0 ? void 0 : modal.classList.remove('is-hidden');
         const close = document.getElementById('details-close-modal');
-        close?.addEventListener('click', () => {
+        close === null || close === void 0 ? void 0 : close.addEventListener('click', () => {
             bodyModel.innerHTML = '';
-            modal?.classList.add('is-hidden');
+            modal === null || modal === void 0 ? void 0 : modal.classList.add('is-hidden');
         });
         const form = readonlydata(ele);
-        bodyModel?.appendChild(form);
+        bodyModel === null || bodyModel === void 0 ? void 0 : bodyModel.appendChild(form);
     };
     tdControler.appendChild(buttondetails);
+    const buttonRestore = document.createElement('button');
+    buttonRestore.className = `btn btn--small`;
+    buttonRestore.dataset.action = `details`;
+    buttonRestore.textContent = `Restore`;
+    buttonRestore.onclick = () => {
+        console.log('this is restore');
+        tr.remove();
+        allEvents[allEvents.length] = ele;
+        saveEvent(allEvents);
+        achiveEvents = [...achiveEvents.filter((v) => v.description !== ele.description)];
+        saveEvent(achiveEvents, archiveEventsKey);
+        updateStaticsSection();
+    };
+    tdControler.appendChild(buttonRestore);
     // const buttonedit = document.createElement('button')
     // buttonedit.className = `btn btn--small`
     // buttonedit.dataset.action = `edit`
@@ -643,17 +658,18 @@ function createTableEventRow(ele, i) {
     button.dataset.action = `details`;
     button.textContent = `Variants`;
     button.onclick = () => {
+        var _a;
         console.log('in click');
         const bodyModel = document.getElementById('vari-modal-body');
         const modal = document.getElementById('vari-event-modal');
-        modal?.classList.remove('is-hidden');
+        modal === null || modal === void 0 ? void 0 : modal.classList.remove('is-hidden');
         const close = document.getElementById('vari-close-modal');
-        close?.addEventListener('click', () => {
+        close === null || close === void 0 ? void 0 : close.addEventListener('click', () => {
             bodyModel.innerHTML = '';
-            modal?.classList.add('is-hidden');
+            modal === null || modal === void 0 ? void 0 : modal.classList.add('is-hidden');
         });
         let content = '';
-        ele.variants?.forEach((v, i) => {
+        (_a = ele.variants) === null || _a === void 0 ? void 0 : _a.forEach((v, i) => {
             content += `<tr class="table__row" data-event="${i + 1}">
         <td>${v.vName}</td>
         <td>${v.vQuantity}</td>
@@ -677,7 +693,7 @@ function createTableEventRow(ele, i) {
       ${content}
     </tbody>
   `;
-        bodyModel?.appendChild(table);
+        bodyModel === null || bodyModel === void 0 ? void 0 : bodyModel.appendChild(table);
     };
     tdVariants.appendChild(button);
     // tdVariants.appendChild(table)
@@ -692,14 +708,14 @@ function createTableEventRow(ele, i) {
         console.log('this is details');
         const bodyModel = document.getElementById('details-modal-body');
         const modal = document.getElementById('details-event-modal');
-        modal?.classList.remove('is-hidden');
+        modal === null || modal === void 0 ? void 0 : modal.classList.remove('is-hidden');
         const close = document.getElementById('details-close-modal');
-        close?.addEventListener('click', () => {
+        close === null || close === void 0 ? void 0 : close.addEventListener('click', () => {
             bodyModel.innerHTML = '';
-            modal?.classList.add('is-hidden');
+            modal === null || modal === void 0 ? void 0 : modal.classList.add('is-hidden');
         });
         const form = readonlydata(ele);
-        bodyModel?.appendChild(form);
+        bodyModel === null || bodyModel === void 0 ? void 0 : bodyModel.appendChild(form);
     };
     tdControler.appendChild(buttondetails);
     const buttonedit = document.createElement('button');
@@ -708,15 +724,15 @@ function createTableEventRow(ele, i) {
     buttonedit.textContent = `Edit`;
     buttonedit.onclick = () => {
         const eventModel = document.getElementById('event-modal');
-        eventModel?.classList.remove('is-hidden');
+        eventModel === null || eventModel === void 0 ? void 0 : eventModel.classList.remove('is-hidden');
         const form = createUpdateForm(ele);
         const closeBtn = document.querySelector('button.modal__close');
-        closeBtn?.addEventListener('click', () => {
-            eventModel?.classList.add('is-hidden');
+        closeBtn === null || closeBtn === void 0 ? void 0 : closeBtn.addEventListener('click', () => {
+            eventModel === null || eventModel === void 0 ? void 0 : eventModel.classList.add('is-hidden');
             form.innerHTML = '';
         });
         const mainModelContent = document.getElementById('modal-body');
-        mainModelContent?.appendChild(form);
+        mainModelContent === null || mainModelContent === void 0 ? void 0 : mainModelContent.appendChild(form);
     };
     tdControler.appendChild(buttonedit);
     const buttonarchive = document.createElement('button');
@@ -817,14 +833,16 @@ function createUpdateForm(event) {
     img.src = event.imageUrl;
     img.alt = 'Image Preview';
     imgDiv.appendChild(img);
-    let newImage;
-    inputFile?.addEventListener('change', (event) => {
-        const file = event.target.files?.[0];
+    let newImage = img.src;
+    inputFile === null || inputFile === void 0 ? void 0 : inputFile.addEventListener('change', (event) => {
+        var _a;
+        const file = (_a = event.target.files) === null || _a === void 0 ? void 0 : _a[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                img.src = e.target?.result;
-                newImage = e.target?.result;
+                var _a, _b;
+                img.src = (_a = e.target) === null || _a === void 0 ? void 0 : _a.result;
+                newImage = (_b = e.target) === null || _b === void 0 ? void 0 : _b.result;
             };
             reader.readAsDataURL(file);
         }
@@ -931,13 +949,13 @@ function createUpdateForm(event) {
                 saveEvent(allEvents);
                 handleTable(currentPage);
                 const closeBtn = document.querySelector('button.modal__close');
-                closeBtn?.addEventListener('click', () => {
-                    eventModel?.classList.add('is-hidden');
+                closeBtn === null || closeBtn === void 0 ? void 0 : closeBtn.addEventListener('click', () => {
+                    eventModel === null || eventModel === void 0 ? void 0 : eventModel.classList.add('is-hidden');
                 });
             }
             else {
             }
-            eventModel?.classList.add('is-hidden');
+            eventModel === null || eventModel === void 0 ? void 0 : eventModel.classList.add('is-hidden');
             form.innerHTML = '';
         }
         else {
@@ -1096,33 +1114,35 @@ function createVariants(event) {
     varBtn.textContent = 'Remove';
     varBtn.addEventListener('click', () => { });
     div.appendChild(varBtn);
-    variantssDiv?.appendChild(div);
+    variantssDiv === null || variantssDiv === void 0 ? void 0 : variantssDiv.appendChild(div);
 }
 function extractUpatedDataFromVar() {
     const allVars = document.getElementById('edit-variants-list');
-    const childs = allVars?.children;
-    if (childs?.length == 0) {
+    const childs = allVars === null || allVars === void 0 ? void 0 : allVars.children;
+    if ((childs === null || childs === void 0 ? void 0 : childs.length) == 0) {
         return;
     }
     let allvars = [];
-    for (let index = 0; index < childs.length; index++) {
-        const vName = document.getElementsByClassName('input edit-variant-row__name')[index].value;
-        const vQuantity = document.getElementsByClassName('input edit-variant-row__qty')[index].value;
-        const vValue = document.getElementsByClassName('input edit-variant-row__value')[index].value;
-        const mySelect = document.getElementsByClassName('select edit-variant-row__type')[index];
-        const isFixed = mySelect?.value == 'fixed';
-        console.log({
-            vName,
-            vQuantity: Number(vQuantity),
-            vValue: Number(vValue),
-            isFixed,
-        });
-        allvars.push({
-            vName,
-            vQuantity: Number(vQuantity),
-            vValue: Number(vValue),
-            isFixed,
-        });
+    if (childs) {
+        for (let index = 0; index < childs.length; index++) {
+            const vName = document.getElementsByClassName('input edit-variant-row__name')[index].value;
+            const vQuantity = document.getElementsByClassName('input edit-variant-row__qty')[index].value;
+            const vValue = document.getElementsByClassName('input edit-variant-row__value')[index].value;
+            const mySelect = document.getElementsByClassName('select edit-variant-row__type')[index];
+            const isFixed = (mySelect === null || mySelect === void 0 ? void 0 : mySelect.value) == 'fixed';
+            console.log({
+                vName,
+                vQuantity: Number(vQuantity),
+                vValue: Number(vValue),
+                isFixed,
+            });
+            allvars.push({
+                vName,
+                vQuantity: Number(vQuantity),
+                vValue: Number(vValue),
+                isFixed,
+            });
+        }
     }
     return allvars;
 }

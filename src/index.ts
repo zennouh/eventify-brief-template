@@ -38,9 +38,7 @@ const eventPerPage = 3
 let maxPages: number = 0
 
 // @ts-ignore
-ChartJs.Chart.register.apply(
-  null,
-  Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
+ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
 )
 
 function renderGraph() {
@@ -212,17 +210,17 @@ function extractDataFromVar() {
   for (let index = 0; index < childs!.length; index++) {
     const vName = (
       document.getElementsByClassName('input variant-row__name')[
-        index
+      index
       ] as HTMLInputElement
     ).value
     const vQuantity = (
       document.getElementsByClassName('input variant-row__qty')[
-        index
+      index
       ] as HTMLInputElement
     ).value
     const vValue = (
       document.getElementsByClassName('input variant-row__value')[
-        index
+      index
       ] as HTMLInputElement
     ).value
     const mySelect = document.getElementsByClassName(
@@ -747,6 +745,23 @@ function createArchiveTableEventRow(ele: IEvent, i: number) {
 
   tdControler.appendChild(buttondetails)
 
+  const buttonRestore = document.createElement('button')
+  buttonRestore.className = `btn btn--small`
+  buttonRestore.dataset.action = `details`
+  buttonRestore.textContent = `Restore`
+  buttonRestore.onclick = () => {
+    console.log('this is restore')
+    tr.remove();
+    allEvents[allEvents.length] = ele;
+    saveEvent(allEvents)
+    achiveEvents = [...achiveEvents.filter((v) => v.description !== ele.description)]
+    saveEvent(achiveEvents, archiveEventsKey);
+    updateStaticsSection()
+
+  }
+
+  tdControler.appendChild(buttonRestore)
+
   // const buttonedit = document.createElement('button')
   // buttonedit.className = `btn btn--small`
   // buttonedit.dataset.action = `edit`
@@ -1008,7 +1023,7 @@ function createUpdateForm(event: IEvent): HTMLElement {
   img.alt = 'Image Preview'
   imgDiv.appendChild(img)
 
-  let newImage:string;
+  let newImage: string = img.src;
 
   inputFile?.addEventListener('change', (event) => {
     const file = (event.target! as HTMLInputElement).files?.[0]
@@ -1271,18 +1286,14 @@ function readonlydata(event: IEvent): HTMLElement {
       let div = document.createElement('div')
       // div.className = 'variant-row'
       div.innerHTML = `
-    <input value="${
-      variant.vName
-    }" type="text" readonly class="input edit-variant-row__name" />
-    <input value="${
-      variant.vQuantity
-    }" type="number" readonly class="input edit-variant-row__qty" placeholder="Qty" min="1" />
-    <input value="${
-      variant.vValue
-    }" type="number" readonly class="input edit-variant-row__value" placeholder="Value" step="0.01" />
-    <input value="${
-      variant.isFixed ? 'Fixed' : 'perCent'
-    }" type="text" readonly class="input edit-variant-row__name" />
+    <input value="${variant.vName
+        }" type="text" readonly class="input edit-variant-row__name" />
+    <input value="${variant.vQuantity
+        }" type="number" readonly class="input edit-variant-row__qty" placeholder="Qty" min="1" />
+    <input value="${variant.vValue
+        }" type="number" readonly class="input edit-variant-row__value" placeholder="Value" step="0.01" />
+    <input value="${variant.isFixed ? 'Fixed' : 'perCent'
+        }" type="text" readonly class="input edit-variant-row__name" />
     `
 
       variantssDiv.appendChild(div)
@@ -1330,7 +1341,7 @@ function createVariants(event: IEvent) {
   varBtn.type = 'button'
   varBtn.className = 'btn btn--danger btn--small variant-row__remove'
   varBtn.textContent = 'Remove'
-  varBtn.addEventListener('click', () => {})
+  varBtn.addEventListener('click', () => { })
   div.appendChild(varBtn)
   variantssDiv?.appendChild(div)
 }
@@ -1344,40 +1355,42 @@ function extractUpatedDataFromVar() {
 
   let allvars: IVariant[] = []
 
-  for (let index = 0; index < childs!.length; index++) {
-    const vName = (
-      document.getElementsByClassName('input edit-variant-row__name')[
+  if (childs) {
+    for (let index = 0; index < childs.length; index++) {
+      const vName = (
+        document.getElementsByClassName('input edit-variant-row__name')[
         index
-      ] as HTMLInputElement
-    ).value
-    const vQuantity = (
-      document.getElementsByClassName('input edit-variant-row__qty')[
+        ] as HTMLInputElement
+      ).value
+      const vQuantity = (
+        document.getElementsByClassName('input edit-variant-row__qty')[
         index
-      ] as HTMLInputElement
-    ).value
-    const vValue = (
-      document.getElementsByClassName('input edit-variant-row__value')[
+        ] as HTMLInputElement
+      ).value
+      const vValue = (
+        document.getElementsByClassName('input edit-variant-row__value')[
         index
-      ] as HTMLInputElement
-    ).value
-    const mySelect = document.getElementsByClassName(
-      'select edit-variant-row__type'
-    )[index] as HTMLSelectElement
-    const isFixed = mySelect?.value == 'fixed'
+        ] as HTMLInputElement
+      ).value
+      const mySelect = document.getElementsByClassName(
+        'select edit-variant-row__type'
+      )[index] as HTMLSelectElement
+      const isFixed = mySelect?.value == 'fixed'
 
-    console.log({
-      vName,
-      vQuantity: Number(vQuantity),
-      vValue: Number(vValue),
-      isFixed,
-    })
+      console.log({
+        vName,
+        vQuantity: Number(vQuantity),
+        vValue: Number(vValue),
+        isFixed,
+      })
 
-    allvars.push({
-      vName,
-      vQuantity: Number(vQuantity),
-      vValue: Number(vValue),
-      isFixed,
-    })
+      allvars.push({
+        vName,
+        vQuantity: Number(vQuantity),
+        vValue: Number(vValue),
+        isFixed,
+      })
+    }
   }
   return allvars
 }
