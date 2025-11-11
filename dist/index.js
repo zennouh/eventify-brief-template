@@ -5,7 +5,7 @@ let allEvents = [];
 let achiveEvents = [];
 let subEvents = [];
 let variants = [];
-let chart;
+let chart = null;
 let currentPage = 1;
 const eventPerPage = 3;
 let maxPages = 0;
@@ -338,7 +338,7 @@ function imgRadio() {
         });
     });
 }
-function init() {
+export function init() {
     var _a, _b, _c;
     getEventsStorage();
     getArchiveEventsStorage();
@@ -359,66 +359,69 @@ function init() {
     (_c = document
         .getElementById('btn-add-variant')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', addVariant);
 }
+export function logP() {
+    console.log("log this shit");
+}
+export function titleAsc() {
+    for (let i = 0; i < allEvents.length; i++) {
+        for (let j = i + 1; j < allEvents.length; j++) {
+            if (allEvents[i].title > allEvents[j].title) {
+                const container = allEvents[i]; // 8
+                allEvents[i] = allEvents[j];
+                allEvents[j] = container;
+            }
+        }
+    }
+    console.log(allEvents);
+}
+export function titleDesc() {
+    for (let i = 0; i < allEvents.length; i++) {
+        for (let j = i + 1; j < allEvents.length; j++) {
+            if (allEvents[i].title < allEvents[j].title) {
+                const container = allEvents[i];
+                allEvents[i] = allEvents[j];
+                allEvents[j] = container;
+            }
+        }
+    }
+    console.log(allEvents);
+}
+export function priceAsc() {
+    for (let i = 0; i < allEvents.length; i++) {
+        for (let j = i + 1; j < allEvents.length; j++) {
+            if (allEvents[i].basePrice > allEvents[j].basePrice) {
+                const container = allEvents[i]; // 8
+                allEvents[i] = allEvents[j];
+                allEvents[j] = container;
+            }
+        }
+    }
+    console.log(allEvents);
+}
+export function priceDesc() {
+    for (let i = 0; i < allEvents.length; i++) {
+        for (let j = i + 1; j < allEvents.length; j++) {
+            if (allEvents[i].basePrice < allEvents[j].basePrice) {
+                const container = allEvents[i];
+                allEvents[i] = allEvents[j];
+                allEvents[j] = container;
+            }
+        }
+    }
+    console.log(allEvents);
+}
+export function seatsAsc() {
+    for (let i = 0; i < allEvents.length; i++) {
+        for (let j = i + 1; j < allEvents.length; j++) {
+            if (allEvents[i].numberOfSet > allEvents[j].numberOfSet) {
+                const container = allEvents[i]; // 8
+                allEvents[i] = allEvents[j];
+                allEvents[j] = container;
+            }
+        }
+    }
+}
 function sort() {
-    function titleAsc() {
-        for (let i = 0; i < allEvents.length; i++) {
-            for (let j = i + 1; j < allEvents.length; j++) {
-                if (allEvents[i].title > allEvents[j].title) {
-                    const container = allEvents[i]; // 8
-                    allEvents[i] = allEvents[j];
-                    allEvents[j] = container;
-                }
-            }
-        }
-        console.log(allEvents);
-    }
-    function titleDesc() {
-        for (let i = 0; i < allEvents.length; i++) {
-            for (let j = i + 1; j < allEvents.length; j++) {
-                if (allEvents[i].title < allEvents[j].title) {
-                    const container = allEvents[i];
-                    allEvents[i] = allEvents[j];
-                    allEvents[j] = container;
-                }
-            }
-        }
-        console.log(allEvents);
-    }
-    function priceAsc() {
-        for (let i = 0; i < allEvents.length; i++) {
-            for (let j = i + 1; j < allEvents.length; j++) {
-                if (allEvents[i].basePrice > allEvents[j].basePrice) {
-                    const container = allEvents[i]; // 8
-                    allEvents[i] = allEvents[j];
-                    allEvents[j] = container;
-                }
-            }
-        }
-        console.log(allEvents);
-    }
-    function priceDesc() {
-        for (let i = 0; i < allEvents.length; i++) {
-            for (let j = i + 1; j < allEvents.length; j++) {
-                if (allEvents[i].basePrice < allEvents[j].basePrice) {
-                    const container = allEvents[i];
-                    allEvents[i] = allEvents[j];
-                    allEvents[j] = container;
-                }
-            }
-        }
-        console.log(allEvents);
-    }
-    function seatsAsc() {
-        for (let i = 0; i < allEvents.length; i++) {
-            for (let j = i + 1; j < allEvents.length; j++) {
-                if (allEvents[i].numberOfSet > allEvents[j].numberOfSet) {
-                    const container = allEvents[i]; // 8
-                    allEvents[i] = allEvents[j];
-                    allEvents[j] = container;
-                }
-            }
-        }
-    }
     const sortEvents = document.getElementById('sort-events');
     sortEvents.addEventListener('change', (event) => {
         const value = event.target.value;
