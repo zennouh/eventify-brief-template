@@ -1,13 +1,17 @@
 import * as ChartJs from 'chart.js'
+import { titleAsc, titleDesc, priceAsc, priceDesc, seatsAsc, calculateStatics } from './indexhelpers.js'
+
 
 const allEventsKey = 'eventsKey'
 const archiveEventsKey = 'archive-eventsKey'
 interface IVariant {
   vName: string
+
   vQuantity: number
   vValue: number
   isFixed: boolean
 }
+
 
 interface IEvent {
   title: string
@@ -18,7 +22,7 @@ interface IEvent {
   variants?: IVariant[]
 }
 
-interface IStatics {
+export interface IStatics {
   totalEvent: number
   totalSeat: number
   totalRevenue: number
@@ -39,9 +43,9 @@ let currentPage = 1
 const eventPerPage = 3
 let maxPages: number = 0
 
-  // @ts-ignore
-  ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
-  )
+// @ts-ignore
+ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass: any) => chartClass.id)
+)
 
 function renderGraph() {
 
@@ -70,19 +74,10 @@ function renderGraph() {
   })
 }
 
-function calculateStatics(): IStatics {
-  let totalEvent = allEvents.length
-  let totalSeat = 0
-  let totalRevenue = 0
-  for (const e of allEvents) {
-    totalSeat += e.numberOfSet
-    totalRevenue += e.basePrice
-  }
-  return { totalEvent, totalSeat, totalRevenue }
-}
+
 
 function updateStaticsSection() {
-  let statics: IStatics = calculateStatics()
+  let statics: IStatics = calculateStatics(allEvents)
   document.getElementById('stat-total-events')!.textContent =
     statics.totalEvent.toString()
   document.getElementById('stat-total-seats')!.textContent =
@@ -97,6 +92,7 @@ function selectSection(event: any) {
   if (div) {
     div.classList.remove('is-visible')
 
+
     const allBtns = document.getElementsByClassName('sidebar__btn')
     for (let index = 0; index < allBtns.length; index++) {
       allBtns[index]!.classList.remove('is-active')
@@ -106,7 +102,37 @@ function selectSection(event: any) {
     const data = event.currentTarget!.dataset.screen
     const section = document.querySelector(`section[data-screen="${data}"]`)
     section?.classList.add('is-visible')
+    const v = getTitles(data);
+    const title = document.getElementById("page-title")
+    const subTitle = document.getElementById("page-subtitle")
+    title!.innerHTML = v.title;
+    subTitle!.innerHTML = v.subTitle
   }
+}
+
+function getTitles(dataset: string): { title: string, subTitle: string } {
+  let title: string = "";
+  let subTitle: string = "";
+  switch (dataset) {
+    case "stats":
+      title = "Statistics";
+      subTitle = "Overview of your events";
+      break;
+    case "add":
+      title = "Add Events";
+      subTitle = "Overview of your inputs";
+      break;
+    case "list":
+      title = "Events list";
+      subTitle = "Overview of all events";
+      break;
+    case "archive":
+      title = "Archive";
+      subTitle = "Overview of your archive";
+      break;
+
+  }
+  return { title, subTitle };
 }
 
 function clearInputs() {
@@ -460,7 +486,7 @@ function imgRadio() {
   })
 }
 
-export function init() {
+function init() {
 
   getEventsStorage()
   getArchiveEventsStorage()
@@ -485,70 +511,9 @@ export function init() {
     ?.addEventListener('click', addVariant)
 }
 
-export function logP() {
-  console.log("log this shit");
 
-}
 
-export function titleAsc() {
-  for (let i = 0; i < allEvents.length; i++) {
-    for (let j = i + 1; j < allEvents.length; j++) {
-      if (allEvents[i].title > allEvents[j].title) {
-        const container = allEvents[i] // 8
-        allEvents[i] = allEvents[j]
-        allEvents[j] = container
-      }
-    }
-  }
-  console.log(allEvents)
-}
-export function titleDesc() {
-  for (let i = 0; i < allEvents.length; i++) {
-    for (let j = i + 1; j < allEvents.length; j++) {
-      if (allEvents[i].title < allEvents[j].title) {
-        const container = allEvents[i]
-        allEvents[i] = allEvents[j]
-        allEvents[j] = container
-      }
-    }
-  }
-  console.log(allEvents)
-}
-export function priceAsc() {
-  for (let i = 0; i < allEvents.length; i++) {
-    for (let j = i + 1; j < allEvents.length; j++) {
-      if (allEvents[i].basePrice > allEvents[j].basePrice) {
-        const container = allEvents[i] // 8
-        allEvents[i] = allEvents[j]
-        allEvents[j] = container
-      }
-    }
-  }
-  console.log(allEvents)
-}
-export function priceDesc() {
-  for (let i = 0; i < allEvents.length; i++) {
-    for (let j = i + 1; j < allEvents.length; j++) {
-      if (allEvents[i].basePrice < allEvents[j].basePrice) {
-        const container = allEvents[i]
-        allEvents[i] = allEvents[j]
-        allEvents[j] = container
-      }
-    }
-  }
-  console.log(allEvents)
-}
-export function seatsAsc() {
-  for (let i = 0; i < allEvents.length; i++) {
-    for (let j = i + 1; j < allEvents.length; j++) {
-      if (allEvents[i].numberOfSet > allEvents[j].numberOfSet) {
-        const container = allEvents[i] // 8
-        allEvents[i] = allEvents[j]
-        allEvents[j] = container
-      }
-    }
-  }
-}
+
 
 function sort() {
   const sortEvents = document.getElementById('sort-events') as HTMLElement
@@ -556,21 +521,19 @@ function sort() {
     const value = (event.target! as HTMLInputElement).value
     switch (value) {
       case 'title-asc':
-        titleAsc()
+        allEvents = titleAsc(allEvents)
         break
       case 'title-desc':
-        console.log('click')
-
-        titleDesc()
+        allEvents = titleDesc(allEvents)
         break
       case 'price-asc':
-        priceAsc()
+        allEvents = priceAsc(allEvents)
         break
       case 'price-desc':
-        priceDesc()
+        allEvents = priceDesc(allEvents)
         break
       case 'seats-asc':
-        seatsAsc()
+        allEvents = seatsAsc(allEvents)
         break
     }
     handleTable(currentPage)

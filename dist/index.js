@@ -1,4 +1,5 @@
 import * as ChartJs from 'chart.js';
+import { titleAsc, titleDesc, priceAsc, priceDesc, seatsAsc, calculateStatics } from './indexhelpers.js';
 const allEventsKey = 'eventsKey';
 const archiveEventsKey = 'archive-eventsKey';
 let allEvents = [];
@@ -29,18 +30,8 @@ function renderGraph() {
         },
     });
 }
-function calculateStatics() {
-    let totalEvent = allEvents.length;
-    let totalSeat = 0;
-    let totalRevenue = 0;
-    for (const e of allEvents) {
-        totalSeat += e.numberOfSet;
-        totalRevenue += e.basePrice;
-    }
-    return { totalEvent, totalSeat, totalRevenue };
-}
 function updateStaticsSection() {
-    let statics = calculateStatics();
+    let statics = calculateStatics(allEvents);
     document.getElementById('stat-total-events').textContent =
         statics.totalEvent.toString();
     document.getElementById('stat-total-seats').textContent =
@@ -59,7 +50,35 @@ function selectSection(event) {
         const data = event.currentTarget.dataset.screen;
         const section = document.querySelector(`section[data-screen="${data}"]`);
         section === null || section === void 0 ? void 0 : section.classList.add('is-visible');
+        const v = getTitles(data);
+        const title = document.getElementById("page-title");
+        const subTitle = document.getElementById("page-subtitle");
+        title.innerHTML = v.title;
+        subTitle.innerHTML = v.subTitle;
     }
+}
+function getTitles(dataset) {
+    let title = "";
+    let subTitle = "";
+    switch (dataset) {
+        case "stats":
+            title = "Statistics";
+            subTitle = "Overview of your events";
+            break;
+        case "add":
+            title = "Add Events";
+            subTitle = "Overview of your inputs";
+            break;
+        case "list":
+            title = "Events list";
+            subTitle = "Overview of all events";
+            break;
+        case "archive":
+            title = "Archive";
+            subTitle = "Overview of your archive";
+            break;
+    }
+    return { title, subTitle };
 }
 function clearInputs() {
     const form = document.getElementById('event-form');
@@ -338,7 +357,7 @@ function imgRadio() {
         });
     });
 }
-export function init() {
+function init() {
     var _a, _b, _c;
     getEventsStorage();
     getArchiveEventsStorage();
@@ -359,88 +378,25 @@ export function init() {
     (_c = document
         .getElementById('btn-add-variant')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', addVariant);
 }
-export function logP() {
-    console.log("log this shit");
-}
-export function titleAsc() {
-    for (let i = 0; i < allEvents.length; i++) {
-        for (let j = i + 1; j < allEvents.length; j++) {
-            if (allEvents[i].title > allEvents[j].title) {
-                const container = allEvents[i]; // 8
-                allEvents[i] = allEvents[j];
-                allEvents[j] = container;
-            }
-        }
-    }
-    console.log(allEvents);
-}
-export function titleDesc() {
-    for (let i = 0; i < allEvents.length; i++) {
-        for (let j = i + 1; j < allEvents.length; j++) {
-            if (allEvents[i].title < allEvents[j].title) {
-                const container = allEvents[i];
-                allEvents[i] = allEvents[j];
-                allEvents[j] = container;
-            }
-        }
-    }
-    console.log(allEvents);
-}
-export function priceAsc() {
-    for (let i = 0; i < allEvents.length; i++) {
-        for (let j = i + 1; j < allEvents.length; j++) {
-            if (allEvents[i].basePrice > allEvents[j].basePrice) {
-                const container = allEvents[i]; // 8
-                allEvents[i] = allEvents[j];
-                allEvents[j] = container;
-            }
-        }
-    }
-    console.log(allEvents);
-}
-export function priceDesc() {
-    for (let i = 0; i < allEvents.length; i++) {
-        for (let j = i + 1; j < allEvents.length; j++) {
-            if (allEvents[i].basePrice < allEvents[j].basePrice) {
-                const container = allEvents[i];
-                allEvents[i] = allEvents[j];
-                allEvents[j] = container;
-            }
-        }
-    }
-    console.log(allEvents);
-}
-export function seatsAsc() {
-    for (let i = 0; i < allEvents.length; i++) {
-        for (let j = i + 1; j < allEvents.length; j++) {
-            if (allEvents[i].numberOfSet > allEvents[j].numberOfSet) {
-                const container = allEvents[i]; // 8
-                allEvents[i] = allEvents[j];
-                allEvents[j] = container;
-            }
-        }
-    }
-}
 function sort() {
     const sortEvents = document.getElementById('sort-events');
     sortEvents.addEventListener('change', (event) => {
         const value = event.target.value;
         switch (value) {
             case 'title-asc':
-                titleAsc();
+                allEvents = titleAsc(allEvents);
                 break;
             case 'title-desc':
-                console.log('click');
-                titleDesc();
+                allEvents = titleDesc(allEvents);
                 break;
             case 'price-asc':
-                priceAsc();
+                allEvents = priceAsc(allEvents);
                 break;
             case 'price-desc':
-                priceDesc();
+                allEvents = priceDesc(allEvents);
                 break;
             case 'seats-asc':
-                seatsAsc();
+                allEvents = seatsAsc(allEvents);
                 break;
         }
         handleTable(currentPage);

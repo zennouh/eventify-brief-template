@@ -10,11 +10,13 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.3"
   },
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "test": "jest"
   },
   "dependencies": {
+    "@babel/parser": "^7.28.5",
+    "@babel/types": "^7.28.5",
     "@kurkle/color": "^0.4.0",
     "@types/chart.js": "^2.9.41",
     "chart.js": "^4.5.1"

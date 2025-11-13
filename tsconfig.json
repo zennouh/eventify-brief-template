@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "rootDir": "./src",
+    "target": "es2017",
+    "module": "ESNext",
     "outDir": "./dist",
-    "target": "ES6",
-    "esModuleInterop": true,
-    "strict": true
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true
   }
 }
