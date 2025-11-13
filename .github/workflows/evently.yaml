@@ -2,7 +2,7 @@ name: evently-brief-template
 
 on:
   push:
-    branches: [feature/list-events]
+    branches: [feature/list-archive]
 
 permissions:
   contents: write
@@ -40,7 +40,7 @@ jobs:
 
           git push origin main
 
-   cd:
+  cd:
      runs-on: ubuntu-latest
      needs: ci
      if: github.ref == 'refs/heads/main'
