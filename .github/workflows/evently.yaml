@@ -37,7 +37,7 @@ jobs:
           git fetch origin
           git checkout main
           git pull origin main
-          git merge origin/dev --no-ff -m "CI: Auto-merge dev into main"
+          git merge origin/dev --no-ff --allow-unrelated-histories -m "CI: Auto-merge dev into main"
 
       - name: Push merge result
         env:
