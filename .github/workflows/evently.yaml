@@ -37,7 +37,7 @@ jobs:
           git fetch origin
           git checkout main
           git pull origin main
-          git merge origin/dev --strategy-option=theirs -m "CI: Auto-merge dev into main (force theirs)"
+          git merge origin/dev --allow-unrelated-histories --strategy-option=theirs -m "CI: Auto-merge dev into main (force theirs)"
 
       - name: Push merge result
         env:
