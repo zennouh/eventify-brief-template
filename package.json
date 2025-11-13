@@ -12,7 +12,8 @@
   },
   "type": "module",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "npx tsc"
   },
   "dependencies": {
     "@babel/parser": "^7.28.5",
