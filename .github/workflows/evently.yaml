@@ -2,7 +2,7 @@ name: evently-brief-template
 
 on:
   push:
-    branches: [feature/list-archive]
+    branches: [feature/archive]
 
 permissions:
   contents: write
