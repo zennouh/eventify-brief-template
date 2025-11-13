@@ -27,14 +27,23 @@ jobs:
       - name: test
         run: npm test
 
-      - name: merge to main from dev
-        if: success() && github.ref == 'refs/heads/dev'
-        uses: devops-actions/auto-merge-action@v2
-        with:
-          github_token: ${{ secrets.PAT_MERGE }}
-          merge_branch: "main"
-          source_branch: "dev"
-          merge_method: "merge"
+      - name: Configure Git user
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"  
+
+      - name: Merge dev into main
+        run: |
+          git fetch origin
+          git checkout main
+          git pull origin main
+          git merge origin/dev --no-ff -m "CI: Auto-merge dev into main"
+
+      - name: Push merge result
+        env:
+          TOKEN: ${{ secrets.PAT_MERGE }}
+        run: |
+          git push ${{ secrets.LINK }} main
 
   cd:
     runs-on: ubuntu-latest

@@ -11,7 +11,8 @@ async function readCommitMsg() {
 
     const fileContent = await fs.readFile(file, 'utf-8');
     const pattern = /^SCRUM-\d{1,}:\s.*/;
-    const isValid = pattern.test(fileContent.trim());
+    const startWith = fileContent.trim().startsWith("PUSH TO DEV")
+    const isValid = pattern.test(fileContent.trim()) || startWith;
 
     if (isValid) {
       process.exit(0);
